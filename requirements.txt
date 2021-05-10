@@ -1,0 +1,11 @@
+flask
+jsonify
+mysql-connector-python
+flask_mysqldb
+Flask-MySQLdb
+datetime
+jsonify
+make_response
+flask_httpauth
+jinja2
+werkzeug
