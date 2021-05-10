@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="logo0.ico" />
+    <title>Log In to getAJob</title>
+</head>
+<body>
+    <body>
+        <style>
+            .button{
+              background-color :#4CAF50;
+              border:none;
+              padding:15px 32px;
+              text-align:center;
+              display:inline-block;
+              font-size:15px;
+              margin: 2px 4px;
+              cursor:pointer;
+            }
+          .container {
+            border-style: solid;
+            padding-top: 150px;
+            padding-bottom: 150px;
+            margin-left: 450px;
+            margin-right: 450px;
+            margin-top: 80px;  }
+        </style>
+        <center>
+         <div class="container">
+            <form action="/empAuth" method="post">
+            <div class="msg">{{ msg }}</div>
+            <label>Email</label><br/>
+                <input type="text" name="email" required></br></br>
+            <label>Password</label><br/>
+                <input type="password" name="password" placeholder="Enter Your Password" id="password" required><br/><br/>
+            <button type="submit" id="button" class="btn btn-primary"> Login </button>
+            </form>
+        </div>
+    </center>
+</body>
+</html>

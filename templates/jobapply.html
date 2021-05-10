@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>getAjob | apply</title>
+    <link rel="shortcut icon" type="image/x-icon" href={{ url_for("static", filename="logo1.ico") }}>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('homepage')}}">GET@Job</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link " href="{{ url_for('homepage')}}" uk-scroll="offset:50">Home <span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
+        </li>
+        <!--Not necessary as of Now
+            <li class="nav-item active col-md-2">
+              <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>-->
+      </ul>
+    </div>
+  </nav>  <br/>
+    <div class="container  card-body card border-dark">
+      <div class="card-header">
+      <h3 style="color:crimson";>{{'No Results found' if not joboffers[0]}}</h3>
+      <a href="{{url_for('dashboard') if not joboffers[0]}}">{{'Click here to Go back' if not joboffers[0]}}</a>
+      <h5 style="color:blueviolet";>{{'we have found ' if joboffers[0]}}{{joboffers[0] if joboffers[0]}}{{' job offers that suit your profile' if joboffers[0]}}</h5>  
+    </div>&nbsp;
+      <div class="row row-cols-1 row-cols-md-3">
+            {% for n in range(1,joboffers[0]+1) %}
+            <div class="col mb-4">
+              <div class="card">
+                <div class="card-header">
+                    <p style="color:blue" class="card-title">{{joboffers[n][1]}}</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                          <h6 class="mb-0">Position</h6>
+                        </div>
+                        <div class="col-sm-6 text-secondary">
+                            {{joboffers[n][1]}}
+                        </div>
+                    </div><hr>
+                    <div class="row">
+                        <div class="col-sm-6">
+                          <h6 class="mb-0">Location</h6>
+                        </div>
+                        <div class="col-sm-6 text-secondary">
+                            {{joboffers[n][3]}}
+                        </div>
+                    </div><hr>
+                    <div class="row">
+                        <div class="col-sm-6">
+                          <h6 class="mb-0">Skills</h6>
+                        </div>
+                        <div class="col-sm-6 text-secondary">
+                            {{joboffers[n][4]}}
+                        </div>
+                    </div><hr>
+                    <div class="row">
+                        <div class="col-sm-6">
+                          <h6 class="mb-0">Salary</h6>
+                        </div>
+                        <div class="col-sm-6 text-secondary">
+                            {{joboffers[n][5]*0.80}} - {{joboffers[n][5]*1.20}}
+                        </div>
+                    </div><hr>
+                    <div class="row">
+                        <div class="col-sm-6">
+                          <h6 class="mb-1">Posted on</h6>
+                        </div>
+                        <div class="col-sm-6 text-secondary">
+                            {{joboffers[n][7]}}
+                        </div>
+                    </div><hr>
+                    <form name="applyjob{{n}}" action="/applyjob" method="POST">
+                        <input type="text" name="jobid" value="{{joboffers[n][0]}}" hidden>
+                        <input type="text" name="org" value="{{joboffers[n][1]}}" hidden>
+                        <input type="text" name="pos" value="{{joboffers[n][2]}}" hidden>
+                        <input type="text" name="city" value="{{joboffers[n][3]}}" hidden>
+                        <input type="submit" class="btn btn-outline-success" name="apply" value="Apply" placeholder="Apply"> 
+                    </form>
+                </div>
+              </div>
+            </div>{% endfor %}
+          </div>
+    </div>
+    <footer class="bg-dark text-white text-center py-3">
+      Copyright &copy; 2021 Get@Job
+    </footer>
+  
+    <!--bootstrap Sources-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous">
+    </script>
+    <script src="js/extention/choices.js"></script>
+    <!-- Chat bot script -->
+    <script>
+      window.watsonAssistantChatOptions = {
+          integrationID: "c685c522-84a3-48bb-9fca-57b9a3e12905", // The ID of this integration.
+          region: "us-east", // The region your integration is hosted in.
+          serviceInstanceID: "1b8a0ba9-3af4-460d-9122-e849d725507c", // The ID of your service instance.
+          onLoad: function(instance) { instance.render(); }
+        };
+      setTimeout(function(){
+        const t=document.createElement('script');
+        t.src="https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js";
+        document.head.appendChild(t);
+      });
+    </script></body>
+</html>
