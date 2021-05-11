@@ -8,37 +8,31 @@
   <link rel="shortcut icon" type="image/x-icon" href={{ url_for("static", filename="logo1.ico") }}>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ url_for('homepage')}}">GET@Job</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <nav class="navbar navbar-expand-md sticky-top  navbar-dark bg-dark navigation-clean-button">
+    <a class="navbar-brand" href="{{ url_for('home')}}">getAJob</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-          <a class="nav-link " href="{{ url_for('homepage')}}" uk-scroll="offset:50">Home <span
-              class="sr-only">(current)</span></a>
+    <div class="collapse navbar-collapse" id="navcol-1">
+      <ul class="navbar-nav ml-auto col-md-8">
+        <li class="nav-item active col-md-2">
+          <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
+        <li class="nav-item active col-md-2">
+          <a class="nav-link" href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
+        <li class="nav-item active col-md-2">
+          <a class="nav-link" href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
+        <li class="nav-item active col-md-2">
+          <a class="nav-link" href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
+        <li class="nav-item active col-md-2">
+          <a class="nav-link" href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
         </li>
         <!--Not necessary as of Now
-            <li class="nav-item active col-md-2">
-              <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>-->
+        <li class="nav-item active col-md-2">
+          <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>-->
       </ul>
     </div>
   </nav>  <br/>
@@ -54,24 +48,24 @@
         <img src="./../static/carouselitem1.jpg" class="d-block w-100" width="640px";
         height="360px"; alt="...">
         <div class="carousel-caption d-none d-md-block">
-          <h5>First slide label</h5>
-          <p>Some representative placeholder content for the first slide.</p>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img src="./../static/carouselitem2.jpg" width="640px";
-        height="360px"; class="d-block w-100" alt="...">
-        <div class="carousel-caption d-none d-md-block">
-          <h5>Second slide label</h5>
-          <p>Some representative placeholder content for the second slide.</p>
+          <h5>Get Placed!</h5>
+          <p>Get placed in your dream job from the comfort of your home.</p>
         </div>
       </div>
       <div class="carousel-item">
         <img src="./../static/carouselitem3.jpg" width="640px";
         height="360px"; class="d-block w-100" alt="...">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Third slide label</h5>
-          <p>Some representative placeholder content for the third slide.</p>
+          <h5>No more waiting</h5>
+          <p>No need to wait in the queue to be interviewed.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="./../static/carouselitem2.jpg" width="640px";
+        height="360px"; class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>GetJob</h5>
+          <p>A place where employers come looking for you.</p>
         </div>
       </div>
     </div>
