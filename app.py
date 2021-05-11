@@ -156,6 +156,8 @@ def unauthorized():
 @app.route('/api/v1.0/jobs/<searchtext>', methods=['GET'])
 @auth.login_required
 def get_jobs(searchtext):
+    temp=searchtext.split('-')
+    searchtext= ' '.join(map(str, temp))
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT organization,position,location,skills,salary,status,dateposted FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
     joboffer=[]
@@ -182,7 +184,6 @@ def get_profile():
         job=list(jobs[i])
         cursor.execute("SELECT position,Organization,location FROM availjobs WHERE jobid=% s LIMIT 5",((job[0]),))
         jobapplied=cursor.fetchone()
-        print(jobapplied)
         appliedjob={"Organisation":jobapplied[1],"Position":jobapplied[0],"Location":jobapplied[2],"Application Status":jobs[i][2],"Date":jobs[i][1]}
         appliedjobs.append(appliedjob)
     return jsonify({'Applied Jobs':appliedjobs})
