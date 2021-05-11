@@ -35,8 +35,12 @@ def profile():
         msg='Please login to proceed!'
         return render_template('login.html',msg=msg)
     else :
-        cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * FROM user WHERE usermail = % s', (session['usermail'], ))
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT * FROM user WHERE usermail = % s', (session['usermail'], ))
+        except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
+            msg = 'A problem on our side, please try after sometime!'
+            return render_template('main.html',msg=msg)
         account = cursor.fetchone()
         msg=account
         edu=account[6].split('!')
@@ -89,9 +93,41 @@ def dashboard():
 @app.route('/empLogin')
 def empLogin():
     return render_template('empLogin.html')
+
 @app.route('/signup', methods =["POST","GET"])
 def signup():
     return render_template('signup.html')
+
+@app.route('/forgotpassword', methods=["POST","GET"])
+def forgotpassword():
+    return render_template('forgotpass.html')
+
+@app.route('/forgotpass',methods=["POST"])
+def forgotpass():
+    if request.method == 'POST':
+        usermail=request.form['email']
+        cursor=mysql.connection.cursor()
+        cursor.execute("SELECT * FROM login where email = %s",(usermail,))
+        if cursor.rowcount:
+            alphabet = string.ascii_letters + string.digits +'!'+'@'+'#'+'$'+'%'+'&'+'*'
+            password = ''.join(secrets.choice(alphabet) for i in range(10))
+            passhash = hashlib.md5(password.encode())
+            passhash = passhash.hexdigest()
+            try :
+                cursor.execute("UPDATE login SET passhash=%s WHERE email=%s",(passhash,usermail,))
+                mysql.connection.commit()
+            except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
+                msg='There is a problem on our side, please try after time!'
+                return render_template('login.html',msg=msg)
+            msg = 'Your password reset request is processed. A new password is sent to your mail.'
+            TEXT = "Hello user" + ",\n\n"+ "We have received processed your password reset request. Your new password is "+password +",\n" 
+            message  = 'Subject: {}\n\n{}'.format("Password Reset Request", TEXT)
+            SUBJECT = "Password Reset Request"
+            sendmail(TEXT,usermail,SUBJECT)
+            return render_template('login.html',msg=msg)
+    else :
+        msg="You don't have an account registered with this email. Please click on sign up to continue."
+    return render_template('login.html',msg=msg)
 
 @app.route('/search',methods =["POST","GET"])
 def search():
@@ -101,14 +137,18 @@ def search():
         searchtext=request.form['searchtext']
         searchtext=searchtext.lower()
         cursor = mysql.connection.cursor()
-        if category == 'skill':
-            cursor.execute("SELECT * FROM availjobs WHERE skills LIKE %s AND status='open'", ("%"+searchtext+"%",))
-        elif category == 'job':
-            cursor.execute("SELECT * FROM availjobs WHERE position LIKE %s AND status='open'",("%"+searchtext+"%",))
-        elif category == 'location':
-            cursor.execute("SELECT * FROM availjobs WHERE location LIKE %s AND status='open'", ("%"+searchtext+"%",))
-        else :
-            cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
+        try :
+            if category == 'skill':
+                cursor.execute("SELECT * FROM availjobs WHERE skills LIKE %s AND status='open'", ("%"+searchtext+"%",))
+            elif category == 'job':
+                cursor.execute("SELECT * FROM availjobs WHERE position LIKE %s AND status='open'",("%"+searchtext+"%",))
+            elif category == 'location':
+                cursor.execute("SELECT * FROM availjobs WHERE location LIKE %s AND status='open'", ("%"+searchtext+"%",))
+            else :
+                cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
+        except :
+            msg='A problem on our side please try again later!'
+            return render_template('main.html',msg=msg)
         joboffers.append(cursor.rowcount)
         for i in range(cursor.rowcount):
             joboffers.append(cursor.fetchone())
@@ -126,7 +166,7 @@ def applyjob():
         today=date.today()
         cursor = mysql.connection.cursor()
         try:
-            cursor.execute("INSERT INTO appliedjobs VALUES (% s, % s, % s, % s, % s)", ('NULL',jobid,usermail,'pending',today))
+            cursor.execute("INSERT INTO appliedjobs(jobid,userid,status,appliedon) VALUES (% s, % s, % s, % s)", (jobid,usermail,'pending',today))
             mysql.connection.commit()
             msg='Your application is received!'
             TEXT = "Hello "+session['username'] + ",\n\n"+ "You have succesfully applied for the position of "+pos+" at "+org+" on "+str(today)+". Your application is sent to "+org+". You can check the status of the application, in your feed. A confirmation mail will also be sent to you once the application is approved. Best regards getAjob Team!" 
@@ -158,8 +198,12 @@ def unauthorized():
 def get_jobs(searchtext):
     temp=searchtext.split('-')
     searchtext= ' '.join(map(str, temp))
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT organization,position,location,skills,salary,status,dateposted FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
+    try :
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT organization,position,location,skills,salary,status,dateposted FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
+    except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
+        joboffer={"Error":'The database is down'}
+        return jsonify({'joboffers': joboffers})
     joboffer=[]
     for i in range(cursor.rowcount):
         job=cursor.fetchone()
