@@ -24,31 +24,38 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md sticky-top  navbar-dark bg-dark navigation-clean-button">
-    <a class="navbar-brand" href="{{ url_for('home')}}">getAJob</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navcol-1">
-      <ul class="navbar-nav ml-auto col-md-8">
-        <li class="nav-item active col-md-2">
-          <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span
+              class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active col-md-2">
-          <a class="nav-link" href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
         </li>
-        <li class="nav-item active col-md-2">
-          <a class="nav-link" href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
         </li>
-        <li class="nav-item active col-md-2">
-          <a class="nav-link" href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
         </li>
-        <li class="nav-item active col-md-2">
-          <a class="nav-link" href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
         </li>
-        <!--Not necessary as of Now
-        <li class="nav-item active col-md-2">
-          <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>-->
+        <li class="nav-item">
+            <li class="nav-item active col-md-2">
+            <a class="nav-link" href="{{url_for('empLogin')}}">Employers</a>
+        </li>
       </ul>
     </div>
   </nav>  <br/>
@@ -62,8 +69,8 @@
     </div>
 
 
-    <div class="card my-3 p-3 border border-dark rounded">
-        <h5>Find Your Dream Job, even faster.</h5>
+    <div class="card my-3 p-3 border border-dark rounded bg-secondary">
+        <h5>Find Your Dream Job, faster.</h5>
         <form name="searchbar" action="/search" method="POST">
           <div class="form-group">
             <div class="row">
@@ -93,7 +100,7 @@
       .column {
         float: left;
         width: 12%;
-        padding: 15px;
+        padding: 3.0vw;
       }
       
       /* Clearfix (clear floats) */
@@ -122,19 +129,16 @@
         <img src="./../static/awslogo.png" alt="Snow" style="width:100%">
       </div> &nbsp;
       <div class="column border border-dark rounded">
-        <img src="./../static/vmwarelogo.png" alt="Snow" style="width:100%">
+        <img src="./../static/cyintlogo.png" alt="Snow" style="width:100%">
       </div> &nbsp;
       <div class="column border border-dark rounded">
         <img src="./../static/tech_mahindralogo.png" alt="Snow" style="width:100%">
       </div> &nbsp;
-      <div class="column border border-dark rounded">
-        <img src="./../static/cyintlogo.png" alt="Snow" style="width:100%">
-      </div> &nbsp;
       </div><br/>
     </div>
-    <div class="card my-3 border border-dark rounded">
+    <div class="card my-3 border border-dark rounded bg-secondary">
       <div class="card-header">
-        <h5>Jobs Offers Based on your skills and Profile</h5>
+        <h5 style="color: blue;">Jobs Offers Based on your skills and Profile</h5>
       </div>
       <div class="card-body">
         <div class="row">
@@ -231,8 +235,46 @@
   </div><!-- container fluid-->
 
 
-  <footer class="bg-dark text-white text-center py-3">
-    Copyright &copy; 2021 Get@Job
+  <footer class="page-footer font-small bg-dark text-white pt-4">
+    <div class="container-fluid text-center text-md-left">
+      <div class="row">
+        <div class="col-md-6 mt-md-0 mt-3">
+          <h5 class="text-uppercase">GetaJob</h5>
+          <p>A place to find your dreams.</p>
+        </div>
+        <hr class="clearfix w-100 d-md-none pb-3">
+        <div class="col-md-3 mb-md-0 mb-3">
+          <h5 class="text-uppercase">Explore</h5>
+  
+          <ul class="list-unstyled">
+            <li>
+              <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+            </li>
+            <li>
+              <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-3 mb-md-0 mb-3">
+          <h5 class="text-uppercase">Support</h5>
+  
+          <ul class="list-unstyled">
+            <li>
+              <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/issues" target="_blank">Feedback</a>
+            </li>
+            <li>
+              <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-" target="_blank">Contribute</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Footer Links -->
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2021 Copyright :
+      <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
+      <a href="TermsConditions.html" target="_blank">Terms of Service </a> | Privacy
+    </div>
   </footer>
 
   <!--bootstrap Sources-->
