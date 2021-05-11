@@ -9,14 +9,14 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-md sticky-top  navbar-dark bg-dark navigation-clean-button">
-        <a class="navbar-brand" href="{{ url_for('homepage')}}">getAJob</a>
+        <a class="navbar-brand" href="{{ url_for('home')}}">getAJob</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navcol-1">
           <ul class="navbar-nav ml-auto col-md-8">
             <li class="nav-item active col-md-2">
-              <a class="nav-link " href="{{ url_for('homepage')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active col-md-2">
               <a class="nav-link" href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
