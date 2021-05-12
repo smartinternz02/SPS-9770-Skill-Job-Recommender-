@@ -44,7 +44,21 @@ def profile():
         account = cursor.fetchone()
         msg=account
         edu=account[6].split('!')
-        return render_template('profile.html',msg=msg,edu=edu)
+        cursor.execute("SELECT DISTINCT(jobid),appliedon,status FROM appliedjobs WHERE userid=%s ORDER BY appliedon LIMIT 3",(session['usermail'],))
+        jobs=[]
+        jobcount=cursor.rowcount
+        for i in range(cursor.rowcount):
+            job=cursor.fetchone()
+            jobs.append(job)
+        appliedjobs=[]
+        appliedjobs.append(jobcount)
+        for i in range(jobcount):
+            job=list(jobs[i])
+            cursor.execute("SELECT position,Organization,location FROM availjobs WHERE jobid=% s LIMIT 3",((job[0]),))
+            jobapplied=cursor.fetchone()
+            appliedjob={"Organisation":jobapplied[1],"Position":jobapplied[0],"Status":jobs[i][2]}
+            appliedjobs.append(appliedjob)
+        return render_template('profile.html',msg=msg,edu=edu,appliedjobs=appliedjobs)
 
 @app.route('/loginpage')
 def loginpage():
@@ -52,8 +66,19 @@ def loginpage():
 
 @app.route('/apipage')
 def apipage():
-    return render_template('apiDocumentation.html')
-
+    email=session['usermail']
+    try :
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT passhash FROM login WHERE email = %s",(email,))
+    except MySQLdb._exceptions.OperationalError :
+        msg="We are facing some issues, please try after sometime!"
+        return render_template('main.html')
+    if cursor.rowcount:
+        passhash=cursor.fetchone()
+        return render_template('apiDocumentation.html',apitoken=passhash)
+@app.route('/tc')
+def tc():
+    return render_template('TermsConditions.html')
 @app.route('/dashboard')
 def dashboard():
     if session['loggedin']:
@@ -65,12 +90,12 @@ def dashboard():
         city=user[2].split(',') #session['usercity']
         session['username']=user[0]
         skills=user[1].split(',')  #=session['userskills']
-        print(skills)
+        #print(skills)
         cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%" + skills[0] + "%","%" + skills[0] + "%","%" + city[0] + "%",))
         joboffers.append(cursor.rowcount)
         for i in range(cursor.rowcount):
             joboffers.append(cursor.fetchone())
-        print(joboffers)
+        #print(joboffers)
         if joboffers[0]<6:
             for i in (1,3):
                 cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s AND status='open'",("%" + skills[1] + "%","%" + skills[1] + "%",))
@@ -313,7 +338,7 @@ def login():
         except MySQLdb._exceptions.OperationalError :
             msg='We are facing issues, Please try after sometime!'
             return render_template('login.html',msg=msg)
-        print (account)
+        #print (account)
         if account:
             session['loggedin'] = True
             session['id'] = account[0]
@@ -329,13 +354,13 @@ def login():
             city=user[2].split(',') #session['usercity']
             session['username']=user[0]
             skills=user[1].split(',')  #=session['userskills']
-            print(skills)
+            #print(skills)
             cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%" + skills[0] + "%","%" + skills[0] + "%","%" + city[0] + "%",))
             joboffers=[]
             joboffers.append(cursor.rowcount)
             for i in range(cursor.rowcount):
                 joboffers.append(cursor.fetchone())
-            print(joboffers)
+            #print(joboffers)
             if joboffers[0]<6:
                 for i in (1,3):
                     cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s AND status='open'",("%" + skills[1] + "%","%" + skills[1] + "%",))
@@ -352,9 +377,9 @@ def login():
                 joboffers[0]-=1
             session['joboffers']=joboffers
             return render_template('main.html',joboffers=joboffers)
-    else:
-        msg = 'Incorrect username / password !'
-        return render_template('login.html', msg = msg)
+        else:
+            msg = 'Incorrect username / password !'
+            return render_template('login.html', msg = msg)
 
 @app.route('/logout')
 def logout():

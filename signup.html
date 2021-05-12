@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | getAjob</title>
+    <link rel="shortcut icon" type="image/x-icon" href={{ url_for("static", filename="logo1.ico") }}>
+</head>
+<body class="bg-secondary">
+    <div class="card">
+        <div class="card-title">
+            <h3>GETAJOB</h3>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title">
+            <center><h1><b>Sign up to get started</b></h1></center>
+        </div>
+    </div>
+    <div class="container-sm bg-light">
+        {{msg}}
+        <form name="signupform" action="/register" method="POST">
+            <div class="tab">
+                <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'personal')">Personal Details</button>
+                <button class="tablinks" onclick="openCity(event, 'education')">Education Details</button>
+                <button class="tablinks" onclick="openCity(event, 'work')">Work Experience</button>
+              </div>
+              
+              <!-- Tab content -->
+              <div id="personal" class="tabcontent">
+                <div class="form-group col-md-6">
+                    <label ford="usermail">Email</label> <br/>
+                        <input type="email" name="usermail"class="form-control" id="inputEmail4" required>
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <label for="username">Name</label>
+                    <div class="form-row">
+                        <div class="col">
+                            <input type="text" name="firstname" class="form-control" placeholder="First name" required>
+                        </div>
+                        <div class="col">
+                            <input type="text" name="lastname" class="form-control" placeholder="Last name" required>
+                        </div>
+                    </div></br>
+                    <label for="gender">Gender</label>
+                    <div class="form-row">
+                        <div class="col">&nbsp;&nbsp;&nbsp;
+                            <input class="form-check-input" name="gender" type="radio" name="exampleRadios" id="exampleRadios1" value="M">
+                                <label class="form-check-label"  for="exampleRadios1">Male</label>
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input" name="gender" type="radio" name="exampleRadios" id="exampleRadios2" value="F">
+                                <label class="form-check-label" for="exampleRadios2"> Female</label>
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input" name="gender" type="radio" name="exampleRadios" id="exampleRadios2" value="O">
+                                <label class="form-check-label" for="exampleRadios2"> Other</label>
+                        </div>
+                    </div><br/>
+                    <label for="inputAge">Age</label>
+                        <input type="number" min="16" max="78" name="age" class="form-control" required> <br/>
+                    <label for="inputAddress">About Me</label>
+                        <textarea class="form-control" name="aboutme" rows=2 placeholder="I'm a..." required></textarea>
+                        <small id="emailHelp" class="form-text text-muted">This will be displayed under your profile</small> <br/>
+                    <label for="inputAddress">Location</label>
+                        <input type="text" name="city" class="form-control" id="inputAddress" placeholder="City Of Residence" required> <br/>
+                </div>
+              </div>
+              
+              <div id="education" class="tabcontent">
+                <div class="form-group col-md-6">
+                    <h3>Education and Certifications</h3>
+                <label for="NameOfGradInst">Graduation</label>
+                <input type="text" name="degree" class="form-control" placeholder="Name of Degree" required><br/>
+                <div class="form-row">
+                    <div class="col">
+                        <input type="text" name="NameOfGradInst" class="form-control" placeholder="Name of the Institute" required>
+                    </div>
+                    <div class="col">
+                    <input type="number" name="gradGpa" class="form-control" min=40 max=99 placeholder="Percentage obtained" required>
+                    </div>
+                    <div class="col">
+                    <input type="date" name="gradDate" class="form-control" placeholder="Date of Completion" required>
+                    </div>
+                </div> <br/>
+                <label for="username">Sr Secondary School</label>
+                <div class="form-row">
+                    <div class="col">
+                        <input type="text" name="NameofSscInst" class="form-control" placeholder="Name of the Institute" required>
+                    </div>
+                    <div class="col">
+                    <input type="number" class="form-control" name="sscGpa" min=40 max=99 placeholder="Percentage obtained" required>
+                    </div>
+                    <div class="col">
+                    <input type="date" class="form-control" name="sscDate" placeholder="Date of Completion" required>
+                    </div>
+                </div> <br/>
+                <label for="username">High School</label>
+                <div class="form-row">
+                    <div class="col">
+                        <input type="text" name="NameofHsclInst" class="form-control" placeholder="Name of the Institute" required>
+                    </div>
+                    <div class="col">
+                    <input type="number" name="HsclGpa" class="form-control" min=40 max=99 placeholder="Percentage obtained" required>
+                    </div>
+                    <div class="col">
+                    <input type="date" name="HsclDate" class="form-control" placeholder="Date of Completion" required>
+                    </div>
+                </div><br/>
+                <label for="inputAddress">I'm Certified In</label>
+                    <textarea class="form-control" name="CertifiedAin" rows=2 placeholder="Cisco Certified Network Associate" required></textarea>
+                </br>
+                </div>
+              </div>
+              
+              <div id="work" class="tabcontent">
+                <div class="form-group col-md-6">
+                    <h3>Skills and Work Experience</h3>
+                    <label for="inputAddress">I'm good at <small id="emailHelp" class="form-text text-muted">(Enter as comma separated values with best skills first)</small>
+                        </label>
+                            <textarea class="form-control" name="skillset" rows=2 placeholder="C, C++, Java, Kotlin, Python, JavaScript, HTML, Bootstrap, etc" required></textarea>
+                            <br/>
+                            <label for="inputAddress">Github Portfolio Link </label>
+                            <input type="text" name="git"class="form-control" id="inputEmail4" required> <br/>
+                        <label for="inputAddress">Worked previously @</label>
+                        <textarea class="form-control" name="workedAt" rows=2 placeholder="SAP Business-Systems Analyst, Supply Chain & Finance,Google Hyderabad, Telangana." required></textarea>
+                        <br/>
+                        <label for="workExperience">Total years of Work Experience</label>
+                        <input type="number" min="0" max="15" name="workExp" class="form-control"> </br>
+                    <div class="form-group form-check">
+                        <input type="checkbox" name="tcCheck" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">
+                                <small>I agree to the <a href="TermsConditions.html">terms and Conditions</a>.</small>
+                            </label>
+                          </div>
+                    <button type="submit" class="btn btn-primary">Sign up</button>
+                </div>
+              </div>
+        </form>
+    </div>
+    <!-- sign up page css -->
+    <style>
+                 /* Style the tab */
+        .tab {
+          overflow: hidden;
+          border: 1px solid #ccc;
+          background-color: #f1f1f1;
+        }       
+
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+          background-color: inherit;
+          float: left;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          padding: 14px 16px;
+          transition: 0.3s;
+        }       
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+          background-color: #ddd;
+        }       
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+          background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+          display: none;
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-top: none;
+        } 
+    </style>
+    <br/>
+    <footer class="page-footer font-small bg-dark text-white pt-4">
+        <div class="container-fluid text-center text-md-left">
+          <div class="row">
+            <div class="col-md-6 mt-md-0 mt-3">
+              <h5 class="text-uppercase">GetaJob</h5>
+              <p>A place to find your dreams.</p>
+            </div>
+            <hr class="clearfix w-100 d-md-none pb-3">
+            <div class="col-md-3 mb-md-0 mb-3">
+              <h5 class="text-uppercase">Explore</h5>
+      
+              <ul class="list-unstyled">
+                <li>
+                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+                </li>
+                <li>
+                  <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3 mb-md-0 mb-3">
+              <h5 class="text-uppercase">Support</h5>
+      
+              <ul class="list-unstyled">
+                <li>
+                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/issues" target="_blank">Feedback</a>
+                </li>
+                <li>
+                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-" target="_blank">Contribute</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Footer Links -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">© 2021 Copyright :
+          <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
+          <a href="{{url_for('tc')}}" target="_blank">Terms of Service </a> | Privacy
+        </div>
+      </footer>
+<!--bootstrap Sources-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+<!-- sign up page scrip -->
+<script>
+    document.getElementById("defaultOpen").click();
+    function openCity(evt, cityName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+  
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+  
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+  
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+    }
+  </script>
+</body>
+</html>
