@@ -218,44 +218,66 @@ def verify_password(token,password):
 def unauthorized():
     return make_response(jsonify({'error': 'Unauthorized access'}), 403)
 
-@app.route('/api/v1.0/jobs/<searchtext>', methods=['GET'])
-@auth.login_required
-def get_jobs(searchtext):
-    temp=searchtext.split('-')
-    searchtext= ' '.join(map(str, temp))
-    try :
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT organization,position,location,skills,salary,status,dateposted FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
-    except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
-        joboffer={"Error":'The database is down'}
-        return jsonify({'joboffers': joboffers})
-    joboffer=[]
-    for i in range(cursor.rowcount):
-        job=cursor.fetchone()
-        jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6]}
-        joboffer.append(jobs)
-    joboffers={}
-    joboffers['Available jobs for '+"'"+searchtext+"'"]=joboffer
-    return jsonify({'joboffers': joboffers})
-
 @app.route('/api/v1.0/jobs', methods=['GET'])
 @auth.login_required
-def get_profile():
-    cursor=mysql.connection.cursor()
-    cursor.execute("SELECT DISTINCT(jobid),appliedon,status FROM appliedjobs WHERE userid=%s ORDER BY appliedon LIMIT 5",(user,))
-    jobs=[]
-    jobcount=cursor.rowcount
-    for i in range(cursor.rowcount):
-        job=cursor.fetchone()
-        jobs.append(job)
-    appliedjobs=[]
-    for i in range(jobcount):
-        job=list(jobs[i])
-        cursor.execute("SELECT position,Organization,location FROM availjobs WHERE jobid=% s LIMIT 5",((job[0]),))
-        jobapplied=cursor.fetchone()
-        appliedjob={"Organisation":jobapplied[1],"Position":jobapplied[0],"Location":jobapplied[2],"Application Status":jobs[i][2],"Date":jobs[i][1]}
-        appliedjobs.append(appliedjob)
-    return jsonify({'Applied Jobs':appliedjobs})
+def get_jobs():
+    searchtext=request.args.get('search')
+    apply=request.args.get('apply')
+    if apply:
+        try:
+            jobid=apply
+            usermail=user
+            today=date.today()
+            cursor=mysql.connection.cursor()
+            cursor.execute("INSERT INTO appliedjobs(jobid,userid,status,appliedon) VALUES (% s, % s, % s, % s)", (jobid,usermail,'pending',today))
+            cursor.execute("SELECT position,organization FROM availjobs WHERE jobid=%s",(jobid,))
+            temp=cursor.fetchone()
+            mysql.connection.commit()
+        except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
+            return jsonify({'Error':'There is a problem on our side, Please try after sometime!'})
+        pos=temp[0]
+        org=temp[1]  
+        msg='Your application is received!'
+        TEXT = "Hello user,\n\n"+ "You have succesfully applied for the position of "+pos+" at "+org+" on "+str(today)+". Your application is sent to "+org+". You can check the status of the application, in your feed. A confirmation mail will also be sent to you once the application is approved. Best regards getAjob Team!" 
+        message  = 'Subject: {}\n\n{}'.format("Job application received", TEXT)
+        SUBJECT = "Job application received."
+        sendmail(TEXT,usermail,SUBJECT)
+        jobapplication={"Organsation":org,"Position":pos,"Applied on":today,"Application Status":'pending'}
+        return jsonify({'Applied for ':jobapplication})
+
+    if searchtext=='appliedjobs':
+        cursor=mysql.connection.cursor()
+        cursor.execute("SELECT DISTINCT(jobid),appliedon,status FROM appliedjobs WHERE userid=%s ORDER BY appliedon LIMIT 5",(user,))
+        jobs=[]
+        jobcount=cursor.rowcount
+        for i in range(cursor.rowcount):
+            job=cursor.fetchone()
+            jobs.append(job)
+        appliedjobs=[]
+        for i in range(jobcount):
+            job=list(jobs[i])
+            cursor.execute("SELECT position,Organization,location FROM availjobs WHERE jobid=% s LIMIT 5",((job[0]),))
+            jobapplied=cursor.fetchone()
+            appliedjob={"Organisation":jobapplied[1],"Position":jobapplied[0],"Location":jobapplied[2],"Application Status":jobs[i][2],"Date":jobs[i][1]}
+            appliedjobs.append(appliedjob)
+        return jsonify({'Applied Jobs':appliedjobs})
+    else:
+        temp=searchtext.split('-')
+        searchtext= ' '.join(map(str, temp))
+        try :
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT organization,position,location,skills,salary,status,dateposted,jobid FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
+        except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
+            joboffer={"Error":'The database is down'}
+            return jsonify({'joboffers': joboffers})
+        joboffer=[]
+        for i in range(cursor.rowcount):
+            job=cursor.fetchone()
+            jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
+            joboffer.append(jobs)
+        joboffers={}
+        joboffers['Available jobs for '+"'"+searchtext+"'"]=joboffer
+        return jsonify({'joboffers': joboffers})
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
