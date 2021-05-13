@@ -224,6 +224,22 @@ def get_jobs():
     if request.headers.get('Content-Type') == 'application/json':
         content = request.get_json(silent=True)
         searchtext=content['search']
+        temp=searchtext.split('-')
+        searchtext= ' '.join(map(str, temp))
+        try :
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT organization,position,location FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
+        except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
+            joboffer={"Error":'The Service is not accessible currently.'}
+            return jsonify({'joboffers': joboffer})
+        joboffer=[]
+        for i in range(cursor.rowcount):
+            job=cursor.fetchone()
+            jobs={i:job[0]+" is looking for a "+job[1]+" in "+job[2]+", to work at "+job[0]+","+job[2]+". The skill requirement of the role matches that of yours."}
+            #jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
+            joboffer.append(jobs)
+        return ({'joboffers': joboffer})
+
     else :
         searchtext=request.args.get('search')
         apply=request.args.get('apply')
@@ -272,8 +288,8 @@ def get_jobs():
             cursor = mysql.connection.cursor()
             cursor.execute("SELECT organization,position,location,skills,salary,status,dateposted,jobid FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
         except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
-            joboffer={"Error":'The database is down'}
-            return jsonify({'joboffers': joboffers})
+            joboffer={"Error":'The service is not accessible currently!'}
+            return jsonify({'joboffers': joboffer})
         joboffer=[]
         for i in range(cursor.rowcount):
             job=cursor.fetchone()
