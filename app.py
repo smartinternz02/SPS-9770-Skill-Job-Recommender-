@@ -218,7 +218,7 @@ def verify_password(token,password):
 def unauthorized():
     return make_response(jsonify({'error': 'Unauthorized access'}), 403)
 
-@app.route('/api/v1.0/jobs', methods=['GET'])
+@app.route('/api/v1.0/jobs', methods=["GET","POST"])
 @auth.login_required
 def get_jobs():
     searchtext=request.args.get('search')
