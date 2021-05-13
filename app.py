@@ -218,32 +218,36 @@ def verify_password(token,password):
 def unauthorized():
     return make_response(jsonify({'error': 'Unauthorized access'}), 403)
 
-@app.route('/api/v1.0/jobs', methods=["GET","POST"])
+@app.route('/api/v1.0/jobs', methods=['GET','POST'])
 @auth.login_required
 def get_jobs():
-    searchtext=request.args.get('search')
-    apply=request.args.get('apply')
-    if apply:
-        try:
-            jobid=apply
-            usermail=user
-            today=date.today()
-            cursor=mysql.connection.cursor()
-            cursor.execute("INSERT INTO appliedjobs(jobid,userid,status,appliedon) VALUES (% s, % s, % s, % s)", (jobid,usermail,'pending',today))
-            cursor.execute("SELECT position,organization FROM availjobs WHERE jobid=%s",(jobid,))
-            temp=cursor.fetchone()
-            mysql.connection.commit()
-        except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
-            return jsonify({'Error':'There is a problem on our side, Please try after sometime!'})
-        pos=temp[0]
-        org=temp[1]  
-        msg='Your application is received!'
-        TEXT = "Hello user,\n\n"+ "You have succesfully applied for the position of "+pos+" at "+org+" on "+str(today)+". Your application is sent to "+org+". You can check the status of the application, in your feed. A confirmation mail will also be sent to you once the application is approved. Best regards getAjob Team!" 
-        message  = 'Subject: {}\n\n{}'.format("Job application received", TEXT)
-        SUBJECT = "Job application received."
-        sendmail(TEXT,usermail,SUBJECT)
-        jobapplication={"Organsation":org,"Position":pos,"Applied on":today,"Application Status":'pending'}
-        return jsonify({'Applied for ':jobapplication})
+    if request.headers.get('Content-Type') == 'application/json':
+        content = request.get_json(silent=True)
+        searchtext=content['search']
+    else :
+        searchtext=request.args.get('search')
+        apply=request.args.get('apply')
+        if apply:
+            try:
+                jobid=apply
+                usermail=user
+                today=date.today()
+                cursor=mysql.connection.cursor()
+                cursor.execute("INSERT INTO appliedjobs(jobid,userid,status,appliedon) VALUES (% s, % s, % s, % s)", (jobid,usermail,'pending',today))
+                cursor.execute("SELECT position,organization FROM availjobs WHERE jobid=%s",(jobid,))
+                temp=cursor.fetchone()
+                mysql.connection.commit()
+            except MySQLdb._exceptions.IntegrityError or MySQLdb._exceptions.OperationalError or MySQLdb._exceptions.ProgrammingError:
+                return jsonify({'Error':'There is a problem on our side, Please try after sometime!'})
+            pos=temp[0]
+            org=temp[1]  
+            msg='Your application is received!'
+            TEXT = "Hello user,\n\n"+ "You have succesfully applied for the position of "+pos+" at "+org+" on "+str(today)+". Your application is sent to "+org+". You can check the status of the application, in your feed. A confirmation mail will also be sent to you once the application is approved. Best regards getAjob Team!" 
+            message  = 'Subject: {}\n\n{}'.format("Job application received", TEXT)
+            SUBJECT = "Job application received."
+            sendmail(TEXT,usermail,SUBJECT)
+            jobapplication={"Organsation":org,"Position":pos,"Applied on":today,"Application Status":'pending'}
+            return jsonify({'Applied for ':jobapplication})
 
     if searchtext=='appliedjobs':
         cursor=mysql.connection.cursor()
