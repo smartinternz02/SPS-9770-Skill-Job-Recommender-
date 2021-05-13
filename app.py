@@ -235,10 +235,10 @@ def get_jobs():
         joboffer=[]
         for i in range(cursor.rowcount):
             job=cursor.fetchone()
-            jobs=job[0]+" is looking for a "+job[1]+" in "+job[2]+", to work at "+job[0]+","+job[2]+". The skill requirement of the role matches that of yours."
+            jobs=job[0]+" is looking for a "+job[1]+" in "+job[2]+", to work at "+job[0]+"."
             #jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
             joboffer.append(jobs)
-        applylink='<form action="/search" method="post" hidden><input type="text" value="'+searchtext+'"name="searchtext" hidden> <a>Apply here.<input type="submit" value="submit" hidden></a></form>'
+        applylink='<form action="/search" method="post"><input type="text" value="'+searchtext+'"name="searchtext" hidden><input type="submit" class="btn btn-link" value="Apply here"></form>'
         joboffer.append(applylink)
         return {"jobs":joboffer}
 
