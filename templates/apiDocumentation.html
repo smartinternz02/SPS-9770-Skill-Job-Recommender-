@@ -43,6 +43,7 @@
   </nav>  <br/>
     <div class="container-fluid border border-primary"
         <div class="card border border-dark">
+          <p>Your api token is <code>{{apitoken if apitoken else 'Not generated'}}</code></p>
           <div class="card-header"><h2>Job Search API</h2>
           </div>&nbsp;
           <center><p>This document describes the Job Search API.</p></center>
@@ -55,30 +56,30 @@
               errors and diagnostic information are returned as an JSON document to ther user.
             </p>
             <div class="card-title"><h4>URL :</h4></div>
-              <a href="http://localhost:8080/api/v1.0/jobs">http://localhost:8080/api/v1.0/jobs</a> <br/><br/>
+              <a href="http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs">getjobwebapp.apps.pcfdev.in/api/v1.0/jobs</a> <br/><br/>
             <div class="card-title"> <h4>Examples :</h4> </div>
               <p>curl is free and open source command line software used to transfer data. Curl comes preinstalled on most of the devices. We will use curl to access the api.</p>
               <p>
           </div>
           <div class="card">
             <div class="card-body">
-              <code>curl -u {api token}:unused -i -X GET http://localhost:8080/api/v1.0/jobs</code>
+              <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/v1.0/jobs</code>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
-              <code>curl -u {api token}:unused -i -X GET http://localhost:8080/api/v1.0/jobs/{searchParameter}</code>
+              <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs/{searchParameter}</code>
             </div>
           </div>
           <div class="card">
             <div class="card-title"> <h4>External Examples :</h4> </div>
             <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://localhost:8080/api/v1.0/jobs/</code>
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs/</code>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://localhost:8080/api/v1.0/jobs/python</code>
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs/python</code>
             </div>
           </div>    
         <br/>
@@ -89,7 +90,7 @@
               <h4>Authorization</h4></div>
             <div class="card-body">
               <p>A user is authorized by their api token, the api token is sent along with the api request, which the system verifies, and return</p>
-              <p>search data to the user. Your api token is available in your <a href="{{url_for('profile')}}" >profile</a> section.</p>
+              <p>search data to the user. Your api token is available on the top of this page.</p>
               </p>
             </div>
           </div>
@@ -279,7 +280,7 @@
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">© 2021 Copyright :
           <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
-          <a href="TermsConditions.html" target="_blank">Terms of Service </a> | Privacy
+          <a href="{{url_for('tc')}}" target="_blank">Terms of Service  | Privacy Policy </a>
         </div>
       </footer>
     

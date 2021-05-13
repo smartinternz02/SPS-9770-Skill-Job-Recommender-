@@ -84,57 +84,51 @@
     </a>
   </div>
 </div> <br/>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    
-    .column {
-      float: left;
-      width: 12%;
-      padding: 1.5vw;
-    }
-    
-    /* Clearfix (clear floats) */
-    .row::after {
-      content: "";
-      clear: both;
-      display: table;
-    }
-    </style>
-  <div class="container-fluid border border-dark rounded" >
-    <h3>Our Employers</h3>
-    <div class="row ">&nbsp;&nbsp;&nbsp;
-    <div class="column border border-dark rounded">
-      <img src="./../static/ibmlogo.png" alt="Snow" style="width:100%">
-    </div> &nbsp;
-    <div class="column border border-dark rounded">
-      <img src="./../static/infosyslogo.png" alt="Snow" style="width:100%">
-    </div>&nbsp;
-    <div class="column border border-dark rounded">
-      <img src="./../static/vmwarelogo.png" alt="Snow" style="width:100%">
-    </div> &nbsp;
-    <div class="column border border-dark rounded">
-      <img src="./../static/accenturelogo.png" alt="Snow" style="width:100%">
-    </div> &nbsp;
-    <div class="column border border-dark rounded">
-      <img src="./../static/awslogo.png" alt="Snow" style="width:100%">
-    </div> &nbsp;
-    <div class="column border border-dark rounded">
-      <img src="./../static/vmwarelogo.png" alt="Snow" style="width:100%">
-    </div> &nbsp;
-    <div class="column border border-dark rounded">
-      <img src="./../static/tech_mahindralogo.png" alt="Snow" style="width:100%">
-    </div> &nbsp;<br/>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  
+  .row {
+display: flex;
+}
+
+.column {
+flex: 14.33%;
+padding: 5px;
+}
+  </style>
+<div class="container-fluid border border-dark rounded" >
+  <h3>Our Employers</h3>
+  <div class="row ">&nbsp;&nbsp;&nbsp;
+  <div class="column border border-dark rounded">
+    <img src="./../static/ibmlogo.png" alt="IBM logo" style="width:100%">
+  </div> &nbsp;
+  <div class="column border border-dark rounded">
+    <img src="./../static/infosyslogo.png" alt="Infosys logo" style="width:100%">
+  </div>&nbsp;
+  <div class="column border border-dark rounded">
+    <img src="./../static/vmwarelogo.png" alt="vmware logo" style="width:100%">
+  </div> &nbsp;
+  <div class="column border border-dark rounded">
+    <img src="./../static/accenturelogo.png" alt="vmware logo" style="width:100%">
+  </div> &nbsp;
+  <div class="column border border-dark rounded">
+    <img src="./../static/awslogo.png" alt="aws logo" style="width:100%">
+  </div> &nbsp;
+  <!-- <div class="column border border-dark rounded">
+    <img src="./../static/cyintlogo.png" alt="cyint logo" style="width:100%">
+  </div> &nbsp; -->
+  <div class="column border border-dark rounded">
+    <img src="./../static/tech_mahindralogo.png" alt="Tech Mahindra" style="width:100%">
+  </div> &nbsp;
+  </div><br/>
   </div>
   <div class="card my-3">
     <div class="card-header">
       <h5>Courses, Udemy, FreeCodeCamp</h5>
     </div>
     <div class="card-body">
-
-      some text here
-
     </div>
   </div>
 <footer class="page-footer font-small bg-dark text-white pt-4">
@@ -175,7 +169,7 @@
   <!-- Copyright -->
   <div class="footer-copyright text-center py-3">© 2021 Copyright :
     <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
-    <a href="TermsConditions.html" target="_blank">Terms of Service </a> | Privacy
+    <a href="{{url_for('tc')}}" target="_blank">Terms of Service  | Privacy Policy </a>
   </div>
 </footer>
   <!--bootstrap Sources-->

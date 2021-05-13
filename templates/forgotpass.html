@@ -10,10 +10,14 @@
     <div class="container-fluid border border-dark">
     <form class="card mt-4" method="POST" action="/forgotpass">
         <div class="card-body">
-            <div class="form-group"> <label for="email-for-pass">Enter your email address</label> <input class="form-control" type="text" name="email" id="email-for-pass" required><small class="form-text text-muted">Enter the email address you used during registration. A new password will be sent to your mail.</small> </div>
+            <div class="form-group"> <label for="email-for-pass">Enter your email address</label> 
+              <input class="form-control" type="text" name="email" id="email-for-pass" required>
+              <small class="form-text text-muted">
+                Enter the email address you used during registration. A new password will be sent to your mail.
+              </small></div>
         </div>
         <div class="card-footer"> <button class="btn btn-success" type="submit">Get New Password</button> 
-        <a href="{{url_for('loginpage')}}"<button class="btn btn-danger" type="submit">Back to Login</button> </div>
+        <a href="{{url_for('loginpage')}}"><button class="btn btn-danger" type="submit">Back to Login</button></a> </div>
     </form>
     </div>
     <footer class="page-footer font-small bg-dark text-white pt-4">
@@ -54,7 +58,7 @@
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">© 2021 Copyright :
           <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
-          <a href="TermsConditions.html" target="_blank">Terms of Service </a> | Privacy
+          <a href="{{url_for('tc')}}" target="_blank">Terms of Service | Privacy Policy</a>
         </div>
       </footer>
       <!--bootstrap Sources-->

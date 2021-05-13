@@ -9,7 +9,7 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB/a>
+    <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -60,7 +60,7 @@
                           <h6 class="mb-0">Position</h6>
                         </div>
                         <div class="col-sm-6 text-secondary">
-                            {{joboffers[n][1]}}
+                            {{joboffers[n][2]}}
                         </div>
                     </div><hr>
                     <div class="row">
@@ -145,7 +145,7 @@
       <!-- Copyright -->
       <div class="footer-copyright text-center py-3">© 2021 Copyright :
         <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
-        <a href="TermsConditions.html" target="_blank">Terms of Service </a> | Privacy
+        <a href="{{url_for('tc')}}" target="_blank">Terms of Service  | Privacy Policy </a>
       </div>
     </footer>
   
