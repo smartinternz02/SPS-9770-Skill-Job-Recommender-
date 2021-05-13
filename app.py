@@ -279,8 +279,8 @@ def get_jobs():
             job=cursor.fetchone()
             jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
             joboffer.append(jobs)
-        joboffers={}
-        joboffers['Available jobs for '+"'"+searchtext+"'"]=joboffer
+        joboffers={"Desc ":"Available job offers for"+"'"+searchtext+"'"}
+        joboffers['jobs']=joboffer
         return jsonify({'joboffers': joboffers})
 @app.errorhandler(404)
 def not_found(error):
