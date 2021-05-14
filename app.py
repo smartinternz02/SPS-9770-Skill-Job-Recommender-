@@ -158,7 +158,7 @@ def forgotpass():
 def search():
     joboffers=[]
     if request.method == 'POST':
-        category=request.form['catgeory']
+        category=request.form['category']
         searchtext=request.form['searchtext']
         searchtext=searchtext.lower()
         cursor = mysql.connection.cursor()
@@ -169,6 +169,9 @@ def search():
                 cursor.execute("SELECT * FROM availjobs WHERE position LIKE %s AND status='open'",("%"+searchtext+"%",))
             elif category == 'location':
                 cursor.execute("SELECT * FROM availjobs WHERE location LIKE %s AND status='open'", ("%"+searchtext+"%",))
+            elif category == 'suggestions':
+                searchtext=searchtext.split(',')
+                cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%"+searchtext[3]+"%","%"+searchtext[0]+"%","%"+searchtext[1]+"%",))
             else :
                 cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
         except :
@@ -238,7 +241,8 @@ def get_jobs():
             jobs=job[0]+" is offering the role of "+job[1]+" at "+job[2]+"."
             #jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
             joboffer.append(jobs)
-        applylink='<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous"><form action="/search" method="post"><input type="text" value="'+searchtext+'"name="searchtext" hidden><input type="text" value="job" name="category" hidden><input type="submit" class="btn btn-link" value="Apply here"></form>'
+        applylink='<style>.btn{background: none!important;border: none;padding: 0!important;color: #069;text-decoration: underline;cursor: pointer; }</style>'
+        applylink+='<form action="/search" method="post"><input type="text" value="'+searchtext+'"name="searchtext" hidden><input type="text" value="job" name="category" hidden><input type="submit" class="btn" value="Apply here"></form>'
         joboffer.append(applylink)
         return {"jobs":joboffer,"apply":applylink}
 
