@@ -36,8 +36,10 @@
           <a class="nav-link text-white"
             href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
         </li>
-        <li class="nav-item active col-md-2">
-          <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>
+        <li class="nav-item">
+            <li class="nav-item active col-md-2">
+            <a class="nav-link" href="{{url_for('empLogin')}}">Employers</a>
+        </li>
       </ul>
     </div>
   </nav>  <br/>
@@ -106,7 +108,7 @@
               </div>
             </div>{% endfor %}
           </div>
-    </div>
+    </div> <br/>
     <footer class="page-footer font-small bg-dark text-white pt-4">
       <div class="container-fluid text-center text-md-left">
         <div class="row">

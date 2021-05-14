@@ -49,28 +49,38 @@
       <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner">
-      <div class="carousel-item active">&nbsp;
-        <img src="./../static/carouselitem1.jpg" class="d-block w-100" width="640px";
-        height="360px"; alt="...">
+      <div class="carousel-item active">
+        <img src="./../static/carouselitem1.png" class="d-block w-100" width="640px"; height="360px"; alt="A person looking at his laptop">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Get Placed!</h5>
-          <p>Get placed in your dream job from the comfort of your home.</p>
+          <div {{'hidden' if session['loggedin'] }}>
+            <button class="btn btn-danger btn-lg" href="{{url_for('signup')}}">Sign up</button>
+            <button class="btn btn-success btn-lg" href="{{url_for('loginpage')}}">Log in</button>
+          </div>
+          <div class="badge badge-dark text-wrap font-weight-bold" style="color:white;">
+          <p>Get placed in your dream job from the comfort of your home.</p> </div>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="./../static/carouselitem3.jpg" width="640px";
-        height="360px"; class="d-block w-100" alt="...">
+        <img src="./../static/carouselitem3.png" class="d-block w-100" width="640px"; height="360px"; alt="Job seekers waiting in the queue to be interviewed">
         <div class="carousel-caption d-none d-md-block">
-          <h5>No more waiting</h5>
-          <p>No need to wait in the queue to be interviewed.</p>
+          <div {{'hidden' if session['loggedin'] }}>
+            <button class="btn btn-danger btn-lg" hreaf="{{url_for('signup')}}">Sign up</button>
+            <button class="btn btn-success btn-lg" href="{{url_for('loginpage')}}">Log in</button>
+          </div>
+          <div class="badge badge-dark text-wrap font-weight-bold" style="color:white;">
+          <p>No need to wait in the queue to be interviewed.</p></div>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="./../static/carouselitem2.jpg" width="640px";
-        height="360px"; class="d-block w-100" alt="...">
+        <img src="./../static/carouselitem2.png" class="d-block w-100" width="640px"; height="360px"; alt="An employer looking for job seekers">
         <div class="carousel-caption d-none d-md-block">
-          <h5>GetJob</h5>
+          <div {{'hidden' if session['loggedin'] }}>
+            <button class="btn btn-danger btn-lg" href="{{url_for('signup')}}">Sign up</button>
+            <button class="btn btn-success btn-lg" href="{{url_for('loginpage')}}">Log in</button>
+          </div>
+          <div class="badge badge-dark text-wrap font-weight-bold" style="color:white;">
           <p>A place where employers come looking for you.</p>
+        </div>
         </div>
       </div>
     </div>
@@ -81,7 +91,7 @@
     <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="sr-only">Next</span>
-    </a>
+    </a>   
   </div>
 </div> <br/>
 <style>

@@ -8,21 +8,50 @@
 
   <title>GETaJob</title>
   <style>
-    .hero-brand-logo {
-      text-align: center;
-      display: inline-block;
-    }
-    .hero-brand-container {
-      padding-top: 140px;
-      padding-bottom: 45px;
-    }
+    * {
+      box-sizing: border-box;
+      }
+    .row {
+      display: flex;
+      }
+    .column {
+      flex: 14.33%;
+      padding: 5px;
+      }
+            @media (max-width: 768px) {
+          .carousel-inner .carousel-item > div {
+              display: none;
+          }
+          .carousel-inner .carousel-item > div:first-child {
+              display: block;
+          }
+      }
+      .carousel-inner .carousel-item.active,
+      .carousel-inner .carousel-item-next,
+      .carousel-inner .carousel-item-prev {
+          display: flex;
+      }
 
-    .hero-brand-container-mobile {
-      display: none;
-    }
+      /* display 3 */
+      @media (min-width: 768px) {
+
+          .carousel-inner .carousel-item-right.active,
+          .carousel-inner .carousel-item-next {
+            transform: translateX(33.333%);
+          }
+
+          .carousel-inner .carousel-item-left.active, 
+          .carousel-inner .carousel-item-prev {
+            transform: translateX(-33.333%);
+          }
+      }
+
+      .carousel-inner .carousel-item-right,
+      .carousel-inner .carousel-item-left{ 
+        transform: translateX(0);
+      }
   </style>
 </head>
-
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
@@ -60,160 +89,152 @@
     </div>
   </nav>  <br/>
 
-
   <div class="container-fluid my-3">
+    <!-- Error message displays if msg variable has data in it, notifies of job application and accessing errors -->
     <div class="alert alert-primary" role="alert"{{'hidden' if not msg}}>{{msg if msg}}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-
-
+    <!-- Search bar -->
     <div class="card my-3 p-3 border border-dark rounded bg-secondary">
-        <h5>Find Your Dream Job, faster.</h5>
-        <form name="searchbar" action="/search" method="POST">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-sm-2">
-                <select class="custom-select" name="catgeory">
-                  <option name="catgeory">Category</option>
-                  <option name="catgeory" value="skill">Skill</option>
-                  <option name="catgeory" value="job">Job</option>
-                  <option name="catgeory" value="location">Location</option>
-                </select>
-              </div>
-                <div class="col-sm-8">
-                  <input type="text" name="searchtext" class="form-control" placeholder="Enter Search Text" required>
-                </div>
-                <div class="col-sm-2">
-                  <input type="submit" class=" form-control btn btn-primary btn-block" value="Search">
-                </div>
+      <h5>Find Your Dream Job, faster.</h5>
+      <form name="searchbar" action="/search" method="POST">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2">
+              <select class="custom-select" name="category">
+                <option name="category">Category</option>
+                <option name="category" value="skill">Skill</option>
+                <option name="category" value="job">Job</option>
+                <option name="category" value="location">Location</option>
+              </select>
+            </div>
+            <div class="col-sm-8">
+              <input type="text" name="searchtext" class="form-control" placeholder="Enter Search Text" required>
+            </div>
+            <div class="col-sm-2">
+              <input type="submit" class=" form-control btn btn-primary btn-block" value="Search">
             </div>
           </div>
-        </form>
+        </div>
+      </form>
     </div>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-      
-      .row {
-  display: flex;
-}
-
-.column {
-  flex: 14.33%;
-  padding: 5px;
-}
-      </style>
+    <!-- Our employers -->
     <div class="container-fluid border border-dark rounded" >
       <h3>Our Employers</h3>
       <div class="row ">&nbsp;&nbsp;&nbsp;
-      <div class="column border border-dark rounded">
-        <img src="./../static/ibmlogo.png" alt="IBM logo" style="width:100%">
-      </div> &nbsp;
-      <div class="column border border-dark rounded">
-        <img src="./../static/infosyslogo.png" alt="Infosys logo" style="width:100%">
-      </div>&nbsp;
-      <div class="column border border-dark rounded">
-        <img src="./../static/vmwarelogo.png" alt="vmware logo" style="width:100%">
-      </div> &nbsp;
-      <div class="column border border-dark rounded">
-        <img src="./../static/accenturelogo.png" alt="vmware logo" style="width:100%">
-      </div> &nbsp;
-      <div class="column border border-dark rounded">
-        <img src="./../static/awslogo.png" alt="aws logo" style="width:100%">
-      </div> &nbsp;
-      <!-- <div class="column border border-dark rounded">
-        <img src="./../static/cyintlogo.png" alt="cyint logo" style="width:100%">
-      </div> &nbsp; -->
-      <div class="column border border-dark rounded">
-        <img src="./../static/tech_mahindralogo.png" alt="Tech Mahindra" style="width:100%">
-      </div> &nbsp;
+        <div class="column border border-dark rounded">
+          <img src="./../static/ibmlogo.png" alt="IBM logo" style="width:100%">
+        </div> &nbsp;
+        <div class="column border border-dark rounded">
+          <img src="./../static/infosyslogo.png" alt="Infosys logo" style="width:100%">
+        </div>&nbsp;
+        <div class="column border border-dark rounded">
+          <img src="./../static/vmwarelogo.png" alt="vmware logo" style="width:100%">
+        </div> &nbsp;
+        <div class="column border border-dark rounded">
+          <img src="./../static/accenturelogo.png" alt="vmware logo" style="width:100%">
+        </div> &nbsp;
+        <div class="column border border-dark rounded">
+          <img src="./../static/awslogo.png" alt="aws logo" style="width:100%">
+        </div> &nbsp;
+        <!-- <div class="column border border-dark rounded">
+          <img src="./../static/cyintlogo.png" alt="cyint logo" style="width:100%">
+        </div> &nbsp; -->
+        <div class="column border border-dark rounded">
+          <img src="./../static/tech_mahindralogo.png" alt="Tech Mahindra" style="width:100%">
+        </div> &nbsp;
       </div><br/>
     </div>
-    <div class="card my-3 border border-dark rounded bg-secondary">
-      <div class="card-header">
-        <h5 style="color: blue;">Jobs Offers Based on your skills and Profile</h5>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          {% for n in range(1,joboffers[0]+1) %}
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-header">
-                <p style="color:blue" class="card-title">{{joboffers[n][1]}}</p>
+    <!-- JOb offer cards displayed with python, the joboffers sent are displyed using a loop -->
+    <div class="container-fluid my-3 border border-dark rounded bg-secondary">
+      <h2><span class="badge badge-primary">Top Job recommendations based on your skills and profile</span></h2>
+      <div class="row mx-auto my-auto">
+          <div id="recipeCarousel" class="carousel slide w-100" data-ride="carousel">
+              <div class="carousel-inner w-100" role="listbox">
+                {% for n in range(1,joboffers[0]+1) %}
+                  <div class="carousel-item {{'active' if n==1}}">
+                      <div class="col-md-4">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="card-title">
+                                  <p style="color:blue" class="card-title">{{joboffers[n][1]}}</p>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <h6 class="mb-0">Position</h6>
+                              </div>
+                              <div class="col-sm-6 text-secondary"> {{joboffers[n][2]}}
+                              </div>
+                            </div>  <hr>
+                
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <h6 class="mb-0">Location</h6>
+                              </div>
+                              <div class="col-sm-6 text-secondary"> {{joboffers[n][3]}}
+                              </div>
+                            </div>  <hr>
+                            
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <h6 class="mb-0">Skills</h6>
+                              </div>
+                              <div class="col-sm-6 text-secondary"> {{joboffers[n][4]}}
+                              </div>
+                            </div> <hr>
+                            
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <h6 class="mb-0">Location</h6>
+                              </div>
+                              <div class="col-sm-6 text-secondary"> {{joboffers[n][5]*0.80}} - {{joboffers[n][5]*1.20}}
+                              </div>
+                            </div> <hr>
+                
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <h6 class="mb-1">Posted on</h6>
+                              </div>
+                              <div class="col-sm-6 text-secondary"> {{joboffers[n][7]}}
+                              </div>
+                            </div> <hr>
+                                
+                            <form name="applyjob{{n}}" action="/applyjob" method="POST">
+                              <input type="text" name="jobid" value="{{joboffers[n][0]}}" hidden>
+                              <input type="text" name="org" value="{{joboffers[n][1]}}" hidden>
+                              <input type="text" name="pos" value="{{joboffers[n][2]}}" hidden>
+                              <input type="text" name="city" value="{{joboffers[n][3]}}" hidden>
+                              <input type="submit" class="btn btn-outline-success" name="apply" value="Apply" placeholder="Apply">
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  {% endfor %}
               </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <h6 class="mb-0">Position</h6>
-                  </div>
-                  <div class="col-sm-6 text-secondary">
-                    {{joboffers[n][1]}}
-                  </div>
-                </div>
-
-                <hr>
-
-                <div class="row">
-                  <div class="col-sm-6">
-                    <h6 class="mb-0">Location</h6>
-                  </div>
-                  <div class="col-sm-6 text-secondary">
-                    {{joboffers[n][3]}}
-                  </div>
-                </div>
-
-                <hr>
-
-                <div class="row">
-                  <div class="col-sm-6">
-                    <h6 class="mb-0">Skills</h6>
-                  </div>
-                  <div class="col-sm-6 text-secondary">
-                    {{joboffers[n][4]}}
-                  </div>
-                </div>
-
-                <hr>
-
-                <div class="row">
-                  <div class="col-sm-6">
-                    <h6 class="mb-0">Location</h6>
-                  </div>
-                  <div class="col-sm-6 text-secondary">
-                    {{joboffers[n][5]*0.80}} - {{joboffers[n][5]*1.20}}
-                  </div>
-                </div>
-
-                <hr>
-
-                <div class="row">
-                  <div class="col-sm-6">
-                    <h6 class="mb-1">Posted on</h6>
-                  </div>
-                  <div class="col-sm-6 text-secondary">
-                    {{joboffers[n][7]}}
-                  </div>
-                </div>
-                <hr>
-
-                <form name="applyjob{{n}}" action="/applyjob" method="POST">
-                  <input type="text" name="jobid" value="{{joboffers[n][0]}}" hidden>
-                  <input type="text" name="org" value="{{joboffers[n][1]}}" hidden>
-                  <input type="text" name="pos" value="{{joboffers[n][2]}}" hidden>
-                  <input type="text" name="city" value="{{joboffers[n][3]}}" hidden>
-                  <input type="submit" class="btn btn-outline-success" name="apply" value="Apply" placeholder="Apply">
-                </form>
-              </div>
-            </div>
+              <a class="carousel-control-prev w-auto" href="#recipeCarousel" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next w-auto" href="#recipeCarousel" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+              </a>
+              <form name="suggestions" action="/search" method="POST" style="float: right;">
+                <input type="text" name="category" value="suggestions" hidden>
+                <input type="text" name="searchtext" value="{{joboffers[1][2]}},{{joboffers[2][3]}},{{joboffers[3][4]}}" hidden>
+                <input type="submit" value="show more" class="btn btn-warning"><br/>
+              </form>
           </div>
-          {% endfor %}
-        </div>
       </div>
-    </div>
-
+  </div>
 
     <div class="card my-3">
       <div class="card-header">
@@ -296,6 +317,29 @@
       t.src="https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js";
       document.head.appendChild(t);
     });
+  </script>
+  <script>
+    $('#recipeCarousel').carousel({
+  interval: 10000
+})
+
+$('.carousel .carousel-item').each(function(){
+    var minPerSlide = 3;
+    var next = $(this).next();
+    if (!next.length) {
+    next = $(this).siblings(':first');
+    }
+    next.children(':first-child').clone().appendTo($(this));
+    
+    for (var i=0;i<minPerSlide;i++) {
+        next=next.next();
+        if (!next.length) {
+        	next = $(this).siblings(':first');
+      	}
+        
+        next.children(':first-child').clone().appendTo($(this));
+      }
+});
   </script>
 </body>
 </html>
