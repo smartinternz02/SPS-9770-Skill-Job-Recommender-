@@ -36,14 +36,14 @@
           <a class="nav-link text-white"
             href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
         </li>
-            <li class="nav-item active col-md-2">Employers
+            <li class="nav-item active col-md-2">
               <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>
       </ul>
     </div>
   </nav>  <br/>
     <div class="container-fluid border border-primary"
         <div class="card border border-dark">
-          <p>Your api token is <code>{{apitoken if apitoken else 'Not generated'}}</code></p>
+          <p>Your api token is <code>{{apitoken[0] if apitoken else 'Not generated'}}</code></p>
           <div class="card-header"><h2>Job Search API</h2>
           </div>&nbsp;
           <center><p>This document describes the Job Search API.</p></center>
@@ -51,35 +51,60 @@
             <h4>Summary</h4>
           </div>
           <div class="card-body">
-            <p>Job Search api is exposed to the programmer through a simple HTTP interface.
-              Query parameters are sent via a single HTTP GET query and search results, 
-              errors and diagnostic information are returned as an JSON document to ther user.
+            <p>GetJOB's Job Search api is a powerful api, exposed to the programmer through a simple HTTP interface.
+              Query parameters are sent via HTTP GET query and search results, errors and diagnostic information are 
+              returned as an JSON document to ther user. The same api interface serves the chatbot of the site.
             </p>
             <div class="card-title"><h4>URL :</h4></div>
-              <a href="http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs">getjobwebapp.apps.pcfdev.in/api/v1.0/jobs</a> <br/><br/>
+              <a href="http://getjob.apps.pcfdev.in/api/v1.0/jobs">http://getjob.apps.pcfdev.in/api/v1.0/jobs</a> <br/><br/>
             <div class="card-title"> <h4>Examples :</h4> </div>
               <p>curl is free and open source command line software used to transfer data. Curl comes preinstalled on most of the devices. We will use curl to access the api.</p>
               <p>
           </div>
           <div class="card">
             <div class="card-body">
-              <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/v1.0/jobs</code>
+              <code>curl -u {api token}:unused -i -X GET http://getjob.apps.pcfdev.in/v1.0/jobs?search=value</code>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
-              <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs/{searchParameter}</code>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title"> <h4>External Examples :</h4> </div>
-            <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs/</code>
+              <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs?search=appliedjobs</code>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs/python</code>
+              <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs?apply=uniquejobid</code>
+            </div>
+          </div> <br/>
+          <div class="card">
+            <div class="card-header"> <h4>External Examples :</h4> </div>
+            <div class="card-body">
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=python</code>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=full-stack-developer</code>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=Hyderabad</code>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=Infosys</code>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=appliedjobs</code>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?apply=2793</code>
             </div>
           </div>    
         <br/>
@@ -121,34 +146,40 @@
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row">{no name}</th>
+                  <th scope="row">search</th>
                   <td>Location</td>
-                  <td>api/v1.0/jobs/Hyderabad</td>
+                  <td>api/v1.0/jobs?search=Hyderabad</td>
                   <td>The list of available jobs in <b>Hyderabad</b></td>
                 </tr>
                 <tr>
-                  <th scope="row">{no name}</th>
+                  <th scope="row">search</th>
                   <td>skill</td>
-                  <td>api/v1.0/jobs/python</td>
+                  <td>api/v1.0/jobs?search=python</td>
                   <td>The list of available jobs requiring <b>python skill</b></td>
                 </tr>
                 <tr>
-                  <th scope="row">{no name}</th>
+                  <th scope="row">search</th>
                   <td>position</td>
-                  <td>api/v1.0/jobs/full-stack-developer</td>
+                  <td>api/v1.0/jobs?search=full-stack-developer</td>
                   <td>The list of available jobs with position as <b>Full-stack-developer</b></td>
                 </tr>
                 <tr>
-                  <th scope="row">{no name}</th>
+                  <th scope="row">search</th>
                   <td>Organisation</td>
-                  <td>api/v1.0/jobs/Infosys</td>
-                  <td>The list of available jobs at<b>Infosys</b></td>
+                  <td>api/v1.0/jobs?search=Infosys</td>
+                  <td>The list of available jobs at <b>Infosys</b></td>
                 </tr>
                 <tr>
-                  <th scope="row">{no name}</th>
-                  <td>-</td>
-                  <td>api/v1.0/jobs/full-stack-developer</td>
-                  <td>Details from your profile like the status of applied jobs</td>
+                  <th scope="row">search</th>
+                  <td>Applied jobs</td>
+                  <td>api/v1.0/jobs?search=appliedjobs</td>
+                  <td>The list of applied jobs and their status</td>
+                </tr>
+                <tr>
+                  <th scope="row">apply</th>
+                  <td>Apply for a job</td>
+                  <td>api/v1.0/jobs?apply=2349</td>
+                  <td>Apply to the job that has the unique id 2349</td>
                 </tr>              
               </tbody>
               </table>
@@ -167,32 +198,27 @@
               <p>Only JSON format is currently supported.</p>
             <div class="card-body">
               <code><pre>
-                  HTTP/1.0 200 OK
-                  Content-Type: application/json
-                  Content-Length: 905
-                  Server: Werkzeug/1.0.1 Python/3.8.5
-                Date: Tue, 11 May 2021 06:08:30 GMT
-      
+                HTTP/1.1 200 OK
+                Content-Type: application/json
+                Date: Sat, 15 May 2021 09:46:36 GMT
+                Server: Werkzeug/2.0.0 Python/3.9.5
+                X-Vcap-Request-Id: 107f42ae-4669-494a-72a9-939c11476920
+                Content-Length: 988
+                Connection: keep-alive
+
                 {
                   "joboffers": {
-                    "Available jobs for 'full stack developer'": [
+                    "Desc ": "Available job offers for'python'",
+                    "jobs": [
                       {
-                        "Company": "Infosys",
-                        "Role": "Full stack Developer",
-                        "Location": "Hyderabad",
-                        "Skill reqirement": "html",
+                        "Company": "GOOGLE",
+                        "Role": "CEO",
+                        "Location": "Jadcherla",
+                        "Skill reqirement": "python,",
                         "Salary": 50000,
                         "Status": "open",
-                        "Posted on": "Tue, 05 Apr 2022 00:00:00 GMT"
-                      },
-                      {
-                        "Company": "TCS",
-                        "Role": "Full stack Developer",
-                        "Location": "jadcherla",
-                        "Skill reqirement": "HTML,CSS,JS,React",
-                        "Salary": 48000,
-                        "Status": "open",
-                        "Posted on": "Sat, 05 Feb 2022 00:00:00 GMT"
+                        "Posted on": "Wed, 04 May 2022 00:00:00 GMT",
+                        "Unique Id": 1
                       },
                       {
                         "Company": "Wipro",
@@ -201,7 +227,18 @@
                         "Skill reqirement": "HTML,CSS,Python,Flask",
                         "Salary": 50000,
                         "Status": "open",
-                        "Posted on": "Tue, 05 Apr 2022 00:00:00 GMT"
+                        "Posted on": "Tue, 05 Apr 2022 00:00:00 GMT",
+                        "Unique Id": 5
+                      },
+                      {
+                        "Company": "Google",
+                        "Role": "Data Scientist",
+                        "Location": "Hyderabad",
+                        "Skill reqirement": "Stastics, python, spark,hadoop",
+                        "Salary": 50000,
+                        "Status": "open",
+                        "Posted on": "Mon, 03 Jan 2022 00:00:00 GMT",
+                        "Unique Id": 6
                       }
                     ]
                   }

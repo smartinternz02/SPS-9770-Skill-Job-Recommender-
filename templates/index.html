@@ -40,8 +40,14 @@
               <a class="nav-link" href="{{url_for('empLogin')}}">Employers</a> </li>
       </ul>
     </div>
-  </nav>  <br/>
-  <div class="container-fluid border border-dark"><br/>
+  </nav>
+  <!-- Error message displays if msg variable has data in it, notifies of job application and accessing errors -->
+  <div class="alert alert-primary" role="alert"{{'hidden' if not msg}}>{{msg if msg}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="container-fluid border border-dark"> <br/>
   <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
@@ -51,10 +57,10 @@
     <div class="carousel-inner">
       <div class="carousel-item active">
         <img src="./../static/carouselitem1.png" class="d-block w-100" width="640px"; height="360px"; alt="A person looking at his laptop">
-        <div class="carousel-caption d-none d-md-block">
+        <div class="carousel-caption">
           <div {{'hidden' if session['loggedin'] }}>
-            <button class="btn btn-danger btn-lg" href="{{url_for('signup')}}">Sign up</button>
-            <button class="btn btn-success btn-lg" href="{{url_for('loginpage')}}">Log in</button>
+            <a href="{{url_for('signup')}}"><button type="submit" class="btn btn-danger btn-lg">Sign up</button></a>
+            <a href="{{url_for('loginpage')}}"><button type="submit" class="btn btn-success btn-lg">Log in</button></a>
           </div>
           <div class="badge badge-dark text-wrap font-weight-bold" style="color:white;">
           <p>Get placed in your dream job from the comfort of your home.</p> </div>
@@ -62,22 +68,22 @@
       </div>
       <div class="carousel-item">
         <img src="./../static/carouselitem3.png" class="d-block w-100" width="640px"; height="360px"; alt="Job seekers waiting in the queue to be interviewed">
-        <div class="carousel-caption d-none d-md-block">
+        <div class="carousel-caption">
           <div {{'hidden' if session['loggedin'] }}>
-            <button class="btn btn-danger btn-lg" hreaf="{{url_for('signup')}}">Sign up</button>
-            <button class="btn btn-success btn-lg" href="{{url_for('loginpage')}}">Log in</button>
-          </div>
+            <a href="{{url_for('signup')}}"><button type="submit" class="btn btn-danger btn-lg">Sign up</button></a>
+            <a href="{{url_for('loginpage')}}"><button type="submit" class="btn btn-success btn-lg">Log in</button></a>
+          </div><br/>
           <div class="badge badge-dark text-wrap font-weight-bold" style="color:white;">
           <p>No need to wait in the queue to be interviewed.</p></div>
         </div>
       </div>
       <div class="carousel-item">
         <img src="./../static/carouselitem2.png" class="d-block w-100" width="640px"; height="360px"; alt="An employer looking for job seekers">
-        <div class="carousel-caption d-none d-md-block">
+        <div class="carousel-caption">
           <div {{'hidden' if session['loggedin'] }}>
-            <button class="btn btn-danger btn-lg" href="{{url_for('signup')}}">Sign up</button>
-            <button class="btn btn-success btn-lg" href="{{url_for('loginpage')}}">Log in</button>
-          </div>
+            <a href="{{url_for('signup')}}"><button type="submit" class="btn btn-danger btn-lg">Sign up</button></a>
+            <a href="{{url_for('loginpage')}}"><button type="submit" class="btn btn-success btn-lg">Log in</button></a>
+          </div> <br/>
           <div class="badge badge-dark text-wrap font-weight-bold" style="color:white;">
           <p>A place where employers come looking for you.</p>
         </div>
