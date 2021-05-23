@@ -11,10 +11,12 @@ from sendemail import sendmail
 from datetime import date
 import MySQLdb.cursors
 import re
+import io
 import hashlib
 import smtplib
 import secrets
 import string
+import csv
 
 app=Flask( __name__ )
 app.config['JSON_SORT_KEYS'] = False
@@ -29,9 +31,38 @@ mysql = MySQL(app)
 def home():
     return render_template('index.html')
 
+# cursor = mysql.connection.cursor()
+# jobroles=[]
+# cursor.execute("SELECT DISTINCT(position) FROM `availjobs` WHERE 1 LIMIT 16")
+# for i in range(cursor.rowcount):
+#     jobrole=cursor.fetchone()
+#     jobroles.append(jobrole)
+# cursor.execute("SELECT DISTINCT(organization) FROM `availjobs` WHERE 1 LIMIT 16")
+# joborgs=[]
+# for i in range(cursor.rowcount):
+#     joborg=cursor.fetchone()
+#     joborgs.append(joborg)
+# print(jobroles,joborgs)    
+
 @app.route('/empLogin')
 def empLogin():
     return render_template('empLogin.html')
+
+@app.route('/closejob', methods=["POST"])
+def closejob():
+    if request.method == 'POST':
+        jobid=request.form['closejob_id']
+        try:
+            cursor = mysql.connection.cursor()
+            print(jobid)
+            cursor.execute("UPDATE availjobs SET status='closed' WHERE jobid=% s",(jobid,),)
+            cursor.execute("UPDATE appliedjobs SET status='rejected' WHERE jobid=% s",(jobid,),)
+            mysql.connection.commit()
+            msg='Job Status changed to Closed!,please login again to continue.'
+        except Exception as e:
+            print(e)
+            msg='There was a problem parsing your request please try after sometime!'
+        return render_template('empLogin.html',msg=msg)
 
 @app.route('/signup', methods =["POST","GET"])
 def signup():
@@ -49,9 +80,130 @@ def tc():
 def loginpage():
     return render_template('login.html')
 
-@app.route('/emlogin')
+@app.route('/emlogin', methods=["GET","POST"])
 def emlogin():
-    print("hello world!")
+    if request.method == 'GET':
+        msg='Please login to proceed!'
+        return render_template('empLogin.html',msg=msg)
+    if request.method == 'POST' :
+        email = request.form['email']
+        passphrase = request.form['password']
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT * FROM employer WHERE username = % s AND passphrase = % s', (email, passphrase),)
+            account = cursor.fetchone()
+        except Exception as e:
+            print('Cannot fetch login details from db',e)
+            msg='We are facing issues, Please try after sometime!'
+            return render_template('empLogin.html',msg=msg)
+        if account:
+            Organisation=account[0]
+            cursor.execute('SELECT jobid,position,location,status,dateposted FROM availjobs WHERE organization = % s AND status = "open"',(Organisation,),)
+            postedjobs=[]
+            posted_job_Ids=[]
+            postedjobs.append(cursor.rowcount) #posted_job_count
+            for i in range(cursor.rowcount):
+                row=cursor.fetchone()
+                posted_job_Ids.append(row[0])
+                job={"Unique Id ":row[0],"Position":row[1],"Location":row[2],"Status":row[3],"Posted on":row[4]}
+                postedjobs.append(job)
+            #print("job ids from availjobs are ",posted_job_Ids)
+            total_applications_received=[]
+            for jobid in posted_job_Ids:
+                job_applications_received=[]
+                #print('Job id for ',jobid)
+                cursor.execute('SELECT distinct(appid),userid,status,appliedon FROM appliedjobs WHERE jobid = % s AND status="pending" ORDER BY appliedon',(jobid,),)
+                for i in range(cursor.rowcount):
+                    row=cursor.fetchone()
+                    jappl={"Application Id":row[0],"Applicant":row[1],"Status":row[2]}
+                    job_applications_received.append(jappl)
+                    #print('Job application for ',jobid,jappl)
+                    #print('The contents of job_applications',job_applications_received)
+                total_applications_received.append({jobid:job_applications_received})
+            return render_template('employer.html',postedjobs=postedjobs,applications=total_applications_received)
+
+@app.route('/learn')
+def learn():
+    return render_template('index.html', scroll='learn')
+
+@app.route('/applicant/<usermail>',methods=["GET"])
+def applicant(usermail):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM user WHERE usermail = % s', (usermail, ))
+        account = cursor.fetchone()
+        userdetails=account
+        edu=account[6].split('!')
+    except Exception as e:
+        print('Cannot access db to show applicant profile',e)
+        msg = 'A problem on our side, please try after sometime!'
+        return 'Failed!'
+    return render_template('applicant.html',userdetails=userdetails,edu=edu)
+
+@app.route('/approvejob',methods=["GET"])
+def approvejob():
+    appid=request.args.get('id')
+    try:
+        cursor=mysql.connection.cursor()
+        cursor.execute('UPDATE appliedjobs SET status="Approved" WHERE appid=% s',(appid,),)
+        cursor = mysql.connection.commit()
+        cursor=mysql.connection.cursor()
+        cursor.execute("SELECT userid FROM appliedjobs WHERE appid=% s",(appid,),)
+        usermail=cursor.fetchone()
+        TEXT =f"""\
+Hello User!
+
+We are happy to announce that one of your applications was approved.
+Please check your profile for further details, you will receive
+communication from  the recruiters shortly to schedule a virtual interview. 
+
+Wishing you all the best for the interview.
+Regards,
+GetaJob Team.
+
+This is a system generated email, please do not reply to this email.
+            """
+        SUBJECT = "Application approved!"
+        sendmail(TEXT,usermail,SUBJECT)
+        msg='Application of the user approved!'
+        return render_template('application.html',msg=msg)
+    except Exception as e:
+        print('Cannot access db or mailing failed to change application status to approved!',e)
+        msg='A Problem on our side, please try again later!'
+        return render_template('empLogin.html',msg=msg)
+
+@app.route('/rejectjob',methods=["GET"])
+def rejectjob():
+    appid=request.args.get('id')
+    try:
+        print(appid)
+        cursor=mysql.connection.cursor()
+        cursor.execute('UPDATE appliedjobs SET status="Rejected" WHERE appid=% s',(appid,),)
+        mysql.connection.commit()
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT userid FROM appliedjobs WHERE appid=% s",(appid,),)
+        usermail=cursor.fetchone()
+        TEXT =f"""\
+Hello User!
+
+We are sorry to inform you that one of your applications was rejeted.
+Please check your profile for further details.
+
+Please use the learning resources provided to upskill yourself.
+Wishing you all the best!
+Regards,
+GetaJob Team.
+
+This is a system generated email, please do not reply to this email.
+            """
+        SUBJECT = "Application rejected!"
+        sendmail(TEXT,usermail,SUBJECT)
+        msg='Application of the user is rejected!'
+        return render_template('application.html',msg=msg)
+    except Exception as e:
+        print('Cannot access db or mailing failed to change application status to approved!',e)
+        msg='A Problem on our side, please try again later!'
+        return render_template('empLogin.html',msg=msg)
 
 @app.route('/profile',methods=["POST","GET"])
 def profile():
@@ -80,7 +232,7 @@ def profile():
                 appliedjob={"Organisation":jobapplied[1],"Position":jobapplied[0],"Status":jobs[i][2]}
                 appliedjobs.append(appliedjob)
         except Exception as e:
-            print('Cannot access db to show user profile'+ e)
+            print('Cannot access db to show user profile',e)
             msg = 'A problem on our side, please try after sometime!'
             return render_template('main.html',msg=msg)
         return render_template('profile.html',userdetails=userdetails,edu=edu,appliedjobs=appliedjobs)
@@ -97,7 +249,7 @@ def apipage():
         else :
             apitoken=""
     except Exception as e:
-        print('cannot fetch api token of user '+ e)
+        print('cannot fetch api token of user ',e)
     return render_template('apiDocumentation.html',apitoken=apitoken)
 
 @app.route('/dashboard')
@@ -134,7 +286,7 @@ def dashboard():
                     del[joboffers[-1]]
                     joboffers[0]-=1
         except Exception as e:
-            print('Cannot fetch suggested jobs for user from db'+e)
+            print('Cannot fetch suggested jobs for user from db',e)
             return render_template('index.html',msg='We are facing issues, please try after a while')
         return render_template('main.html',joboffers=joboffers)
     else :
@@ -144,7 +296,7 @@ def dashboard():
 def appliedjobs():
     try:
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT DISTINCT(jobid),appliedon,status FROM appliedjobs WHERE userid=%s ORDER BY appliedon",(session['usermail'],))
+        cursor.execute("SELECT DISTINCT(jobid),appliedon,status FROM appliedjobs WHERE userid=%s ORDER BY appliedon ASC",(session['usermail'],))
         jobs=[]
         jobcount=cursor.rowcount
         for i in range(cursor.rowcount):
@@ -159,7 +311,7 @@ def appliedjobs():
             appliedjob={"Organisation":jobapplied[1],"Position":jobapplied[0],"Status":jobs[i][2],"Applied On":jobs[i][1]}
             appliedjobs.append(appliedjob)
     except Exception as e:
-        print('Cannot access db to show user profile'+ e)
+        print('Cannot access db to show user profile',e)
         msg = 'A problem on our side, please try after sometime!'
         return render_template('main.html',msg=msg)
     return render_template('appliedjobs.html',appliedjobs=appliedjobs)
@@ -180,26 +332,28 @@ def forgotpass():
                 mysql.connection.commit()
                 msg = 'Your password reset request is processed. A new password is sent to your mail.'
                 TEXT =f"""\
-                Hi user,
+Hi user,
 
-                We have processed your password reset request. You can now access your account with the
-                following login credentials. This mail has the password that you would use from now on 
-                to login to the website. So, please retain this email.
+We have processed your password reset request. 
+You can now access your account with the following
+login credentials. This mail has the password that
+you would use from now on to login to the website.
+So, please retain this email.
 
-                Login Details
-                Email    : {usermail}
-                Password : " {password} "
+Login Details
+Email    : {usermail}
+Password : " {password} "
 
-                Wishing you all the best and we hope you will land in your dream job soon.
-                Regards,
-                GetaJob Team.
+Wishing you All the best!
+Regards,
+GetaJob Team.
 
-                This is a system generated email, please do not reply to this email.
+This is a system generated email, please do not reply to this email.
                 """
                 SUBJECT = "Password Rest Request"
                 sendmail(TEXT,usermail,SUBJECT)
             except Exception as e:
-                print('Cannot add updated password to db'+ e)
+                print('Cannot add updated password to db',e)
                 msg='There is a problem on our side, please try after time!'
                 return render_template('login.html',msg=msg)
         else :
@@ -208,12 +362,18 @@ def forgotpass():
 
 @app.route('/search',methods =["POST","GET"])
 def search():
+    msg=''
     joboffers=[]
     if request.method == 'POST':
         category=request.form['category']
         searchtext=request.form['searchtext']
         searchtext=searchtext.lower()
-        cursor = mysql.connection.cursor()
+    if request.method == 'GET':
+        category='na'
+        searchtext=request.args.get('searchtext')
+        searchtext=searchtext.lower()
+    cursor = mysql.connection.cursor()
+    if searchtext and category:
         try :
             if category == 'skill':
                 cursor.execute("SELECT * FROM availjobs WHERE skills LIKE %s AND status='open'", ("%"+searchtext+"%",))
@@ -227,14 +387,14 @@ def search():
             else :
                 cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
         except Exception as e:
-            print('Cannot fetch from db to show search results'+ e)
+            print('Cannot fetch from db to show search results',e)
             msg='A problem on our side please try again later!'
             return render_template('main.html',msg=msg)
         joboffers.append(cursor.rowcount)
         for i in range(cursor.rowcount):
             joboffers.append(cursor.fetchone())
         msg='Search Results'       
-    return render_template('jobapply.html',msg=msg,joboffers=joboffers)
+        return render_template('jobapply.html',msg=msg,joboffers=joboffers)
 
 @app.route('/applyjob',methods=["POST"])
 def applyjob():
@@ -251,32 +411,35 @@ def applyjob():
             mysql.connection.commit()
             msg='Your application is received!'
             TEXT =f"""\
-            Hi {session['username']},
+Hi {session['username']},
 
-            Thank you for applying to the role of {pos} at {org}. 
+Thank you for applying to the role of {pos} at {org}. 
 
-            Iam happy to announce that your application for the role of {pos} at {org} is accepted. 
-            All further communication will be from {org}. If you are among the qualified candidates, you will
-            receive  communication from  the recruiters of {org} to schedule a virtual interview. In any case, 
-            we will keep you posted on the  status of your application. You can also check the status of your 
-            application from the profile section of the website.
+Iam happy to announce that your application for the role of {pos}
+at {org} is received. All further communication will be from {org}.
+If you are among the qualified candidates, you will receive  communication
+from  the recruiters of {org} to schedule a virtual interview. 
 
-            Application Details
-            Organization : {org}
-            position : {pos}
-            Name    : {session['username']}
-            Email  for correspondence {usermail}.
+In any case, we will keep you posted on the  status of your application.
+You can also check the status of your application from the profile section
+of the website.
 
-            Wishing you all the best and we hope you will land in your dream job soon.
-            Regards,
-            GetaJob Team.
+Application Details
+Organization : {org}
+Position : {pos}
+Name    : {session['username']}
+Email  for correspondence {usermail}.
 
-            This is a system generated email, please do not reply to this email.
+Wishing you all the best and we hope you will land in your dream job soon.
+Regards,
+GetaJob Team.
+
+This is a system generated email, please do not reply to this email.
             """
             SUBJECT = "Application Received!"
             sendmail(TEXT,usermail,SUBJECT)
         except Exception as e:
-            print('Cannot add applied job to db or send mail to user'+ e)
+            print('Cannot add applied job to db or send mail to user',e)
             msg = 'A problem on our side, please try after sometime!'
     return render_template('main.html',msg=msg,joboffers=session['joboffers'])
 
@@ -306,9 +469,9 @@ def get_jobs():
         searchtext= ' '.join(map(str, temp))
         try :
             cursor = mysql.connection.cursor()
-            cursor.execute("SELECT organization,position,location FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open' LIMIT 3",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
+            cursor.execute("SELECT organization,position,location FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open' LIMIT 2",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
         except Exception as e:
-            print('While serving chatbot request :'+ e)
+            print('While serving chatbot request :',e)
             joboffer={"Error":'The Service is not accessible currently.'}
             return jsonify({'joboffers': joboffer})
         joboffer=[]
@@ -316,6 +479,8 @@ def get_jobs():
             job=cursor.fetchone()
             jobs=job[0]+" is offering the role of "+job[1]+" at "+job[2]+"."
             #jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
+            joboffer.append(jobs)
+        if rowcount==1:
             joboffer.append(jobs)
         applylink='<style>.buton{background: none!important;border: none;padding: 0!important;color: #069;text-decoration: underline;cursor: pointer; }</style>'
         applylink+='<form action="/search" method="post"><input type="text" value="'+searchtext+'"name="searchtext" hidden><input type="text" value="job" name="category" hidden><input type="submit" class="buton" value="Apply here"></form>'
@@ -334,36 +499,42 @@ def get_jobs():
                 cursor.execute("INSERT INTO appliedjobs(jobid,userid,status,appliedon) VALUES (% s, % s, % s, % s)", (jobid,usermail,'pending',today))
                 cursor.execute("SELECT position,organization FROM availjobs WHERE jobid=%s",(jobid,))
                 temp=cursor.fetchone()
+                if not cursor.rowcount:
+                    jobapplication="Job doesn't exist for the Id :"+apply+" !"
+                    return jsonify({'Applied for':jobapplication})
                 mysql.connection.commit()
                 pos=temp[0]
                 org=temp[1]  
                 msg='Your application is received!'
                 TEXT =f"""\
-                Hello user,
+Hello user,
 
-                Thank you for applying to the role of {pos} at {org}. 
+Thank you for applying to the role of {pos} at {org}. 
 
-                Iam happy to announce that your application for the role of {pos} at {org} is accepted. 
-                All further communication will be from {org}. If you are among the qualified candidates, you will
-                receive  communication from  the recruiters of {org} to schedule a virtual interview. In any case, 
-                we will keep you posted on the  status of your application. You can also check the status of your 
-                application from the profile section of the website.
+Iam happy to announce that your application for the role of {pos}
+at {org} is received. All further communication will be from {org}.
+If you are among the qualified candidates, you will receive  communication
+from  the recruiters of {org} to schedule a virtual interview.
 
-                Application Details
-                Organization : {org}
-                position : {pos}
+In any case, we will keep you posted on the  status of your 
+application. You can also check the status of your application
+from the profile section of the website.
 
-                Wishing you all the best and we hope you will land in your dream job soon.
-                Regards,
-                GetaJob Team.
+Application Details
+Organization : {org}
+Position : {pos}
 
-                This is a system generated email, please do not reply to this email.
+Wishing you all the best and Luck.
+Regards,
+GetaJob Team.
+
+This is a system generated email, please do not reply to this email.
                 """
                 SUBJECT = "Application Received!"
                 sendmail(TEXT,usermail,SUBJECT)
                 jobapplication={"Organsation":org,"Position":pos,"Applied on":today,"Application Status":'pending'}
             except Exception as e:
-                print('User trying to apply for a job using api failed or mail sending failed :'+ e)
+                print('User trying to apply for a job using api failed or mail sending failed :',e)
                 return jsonify({'Error':'There is a problem on our side, Please try after sometime!'})
             return jsonify({'Applied for ':jobapplication})
 
@@ -390,7 +561,7 @@ def get_jobs():
             cursor = mysql.connection.cursor()
             cursor.execute("SELECT organization,position,location,skills,salary,status,dateposted,jobid FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
         except Exception as e:
-            print('While the user is trying to check status of applied jobs using the api :'+ e)
+            print('While the user is trying to check status of applied jobs using the api :',e)
             joboffer={"Error":'The service is not accessible currently!'}
             return jsonify({'joboffers': joboffer})
         joboffer=[]
@@ -398,7 +569,7 @@ def get_jobs():
             job=cursor.fetchone()
             jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
             joboffer.append(jobs)
-        joboffers={"Desc ":"Available job offers for"+"'"+searchtext+"'"}
+        joboffers={"Desc ":"Available job offers for "+"'"+searchtext+"'"}
         joboffers['jobs']=joboffer
         return jsonify({'joboffers': joboffers})
 @app.errorhandler(404)
@@ -455,28 +626,29 @@ def register():
                 mysql.connection.commit()
                 msg = 'You are now registered with getAjob! Login to Continue. The password is sent to your mail.'
                 TEXT =f"""\
-                Hi {username},
+Hi {username},
 
-                Welcome to getaJob, Thank you for registering with us. Your account is now actived. 
-                This confirmation is for your records, and this mail also has the password that you
-                will use to login to the website. So, please retain this email.
+Welcome to getaJob, Thank you for registering with us. 
+Your account is now actived. This confirmation is for your
+records, and this mail also has the password that you will
+use to login to the website. So, please retain this email.
 
-                Registration Details
-                Name     : {username}
-                Email    : {usermail}
-                Password : "{password}"
+Registration Details
+Name     : {username}
+Email    : {usermail}
+Password : "{password}"
 
-                Wishing you all the best and we hope you will land in your dream job soon.
-                Regards,
-                GetaJob Team.
+Wishing you all the best!
+Regards,
+GetaJob Team.
 
-                If you have any questions, including changes to your registration or 
-                cancellation of request. Please feel free to reply to this email.
+If you have any questions, including changes to your registration or 
+cancellation of request. Please feel free to reply to this email.
                 """
                 SUBJECT = "GETaJob Registration"
                 sendmail(TEXT,usermail,SUBJECT)
             except Exception as e:
-                print('Inserting data into login or user table failed :'+ e)
+                print('Inserting data into login or user table failed :',e)
                 msg = 'A problem on our side, please try after sometime!'
                 return render_template('signup.html',msg=msg)
     elif request.method == 'GET':
@@ -499,7 +671,7 @@ def login():
             cursor.execute('SELECT * FROM login WHERE email = % s AND passhash = % s', (email, passhash),)
             account = cursor.fetchone()
         except Exception as e:
-            print('Cannot fetch login details from db'+ e)
+            print('Cannot fetch login details from db',e)
             msg='We are facing issues, Please try after sometime!'
             return render_template('login.html',msg=msg)
         #print (account)
