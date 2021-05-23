@@ -1,370 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Documentation</title>
     <link rel="shortcut icon" type="image/x-icon" href={{ url_for("static", filename="logo1.ico") }}>
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-          <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span
-              class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white"
-            href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
-        </li>
-            <li class="nav-item active col-md-2">
-              <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>
-      </ul>
-    </div>
-  </nav>  <br/>
-    <div class="container-fluid border border-primary"
-        <div class="card border border-dark">
-          <p>Your api token is <code>{{apitoken[0] if apitoken else 'Not generated'}}</code></p>
-          <div class="card-header"><h2>Job Search API</h2>
-          </div>&nbsp;
-          <center><p>This document describes the Job Search API.</p></center>
-          <div class="card-header">
-            <h4>Summary</h4>
-          </div>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white"
+              href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white"
+              href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white"
+              href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white"
+              href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
+          </li>
+          <li class="nav-item active col-md-2">
+            <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> 
+          </li>
+        </ul>
+      </div>
+    </nav><br/>
+    <!-- Page container -->
+    <div class="container-fluid border border-primary">
+
+      <div class="card">
+        <p>Your api token is { <code>{{apitoken[0] if apitoken else 'Not generated'}}</code> }</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h2>Job Search API</h2><p>This document describes the Job Search API.</p>
+        </div>
+      </div>
+      <div class="header">
+        <div class="card-header">
+         <h4>Summary</h4>
+        </div>
+      </div>
+        <div class="card">
           <div class="card-body">
             <p>GetJOB's Job Search api is a powerful api, exposed to the programmer through a simple HTTP interface.
               Query parameters are sent via HTTP GET query and search results, errors and diagnostic information are 
               returned as an JSON document to ther user. The same api interface serves the chatbot of the site.
             </p>
-            <div class="card-title"><h4>URL :</h4></div>
-              <a href="http://getjob.apps.pcfdev.in/api/v1.0/jobs">http://getjob.apps.pcfdev.in/api/v1.0/jobs</a> <br/><br/>
-            <div class="card-title"> <h4>Examples :</h4> </div>
-              <p>curl is free and open source command line software used to transfer data. Curl comes preinstalled on most of the devices. We will use curl to access the api.</p>
-              <p>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <code>curl -u {api token}:unused -i -X GET http://getjob.apps.pcfdev.in/v1.0/jobs?search=value</code>
+            <div class="card-title">
+              <h4>URL :</h4>
             </div>
+              <a href="http://getjob.apps.pcfdev.in/api/v1.0/jobs">http://getjob.apps.pcfdev.in/api/v1.0/jobs</a> <br/><br/>
+            <div class="card-title">
+              <h4>Examples :</h4>
+            </div>
+              <p>curl is free and open source command line software used to transfer data. Curl comes preinstalled on most of the devices. We will use curl to access the api.</p>
           </div>
-          <div class="card">
-            <div class="card-body">
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <code>curl -u {api token}:unused -i -X GET http://getjob.apps.pcfdev.in/v1.0/jobs?search=value</code>
+          </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
               <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs?search=appliedjobs</code>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
+        </div>
+        <div class="card">
+            <div class="card-header">
               <code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs?apply=uniquejobid</code>
             </div>
-          </div> <br/>
-          <div class="card">
-            <div class="card-header"> <h4>External Examples :</h4> </div>
-            <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=python</code>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=full-stack-developer</code>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=Hyderabad</code>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=Infosys</code>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=appliedjobs</code>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <code>curl -u b2e9899ef59bd953f:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?apply=2793</code>
-            </div>
-          </div>    
-        <br/>
-
-        <div class="container-fluid border border-dark">
-          <div class="card">
+        </div> <br/>
+        <div class="card">
             <div class="card-header">
-              <h4>Authorization</h4></div>
-            <div class="card-body">
-              <p>A user is authorized by their api token, the api token is sent along with the api request, which the system verifies, and return</p>
-              <p>search data to the user. Your api token is available on the top of this page.</p>
-              </p>
+              <h4>External Examples :</h4> 
             </div>
+        </div>
+        <div class="card">
+            <div class="card-body" style="display: flex;">
+              <code style="border: 2px solid black ; padding:0.4rem; width:75%;" id="p1">curl -u {{apitoken[0] if apitoken else 'apitoken'}}:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=python</code>&nbsp;
+              <button class="boton" id="c1" onclick='copyToClipboard("#p1"); document.getElementById("c1").innerHTML = "Copied!";'>COPY 
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.6rem" height="1.5rem" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                </svg>
+              </button>
+            </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="display: flex;">
+            <code style="border: 2px solid black ; padding:0.4rem; width:75%;" id="p2">curl -u {{apitoken[0] if apitoken else 'b2e9899ef59bd953f'}}:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=full-stack-developer</code>&nbsp;
+            <button class="boton" id="c2" onclick='copyToClipboard("#p2"); document.getElementById("c2").innerHTML = "Copied!";'>COPY 
+              <svg xmlns="http://www.w3.org/2000/svg" width="1.6rem" height="1.5rem" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+              </svg>
+            </button>
           </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="display: flex;">
+            <code style="border: 2px solid black ; padding:0.4rem; width:75%;" id="p3">curl -u {{apitoken[0] if apitoken else 'apitoken'}}:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=Hyderabad</code>&nbsp;
+            <button class="boton" id="c3" onclick='copyToClipboard("#p3"); document.getElementById("c3").innerHTML = "Copied!";'>COPY 
+              <svg xmlns="http://www.w3.org/2000/svg" width="1.6rem" height="1.5rem" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+              </svg>
+            </button>
           </div>
-        <br/>
-
+        </div>
+        <div class="card">
+          <div class="card-body" style="display: flex;">
+            <code style="border: 2px solid black ; padding:0.4rem; width:75%;" id="p4">curl -u {{apitoken[0] if apitoken else 'apitoken'}}:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=Infosys</code>&nbsp;
+            <button class="boton" id="c4" onclick='copyToClipboard("#p4"); document.getElementById("c4").innerHTML = "Copied!";'>COPY 
+              <svg xmlns="http://www.w3.org/2000/svg" width="1.6rem" height="1.5rem" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="display: flex;">
+            <code style="border: 2px solid black ; padding:0.4rem; width:75%;" id="p5">curl -u {{apitoken[0] if apitoken else 'apitoken'}}:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=appliedjobs</code>&nbsp;
+            <button class="boton" id="c5" onclick='copyToClipboard("#p5"); document.getElementById("c5").innerHTML = "Copied!";'>COPY 
+              <svg xmlns="http://www.w3.org/2000/svg" width="1.6rem" height="1.5rem" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="display: flex;">
+            <code style="border: 2px solid black ; padding:0.4rem; width:75%;" id="p6">curl -u {{apitoken[0] if apitoken else 'apitoken'}}:unused -i -X GET http://getjob.apps.pcfdev.in/api/v1.0/jobs?search=2793</code>&nbsp;
+            <button class="boton" id="c6" onclick='copyToClipboard("#p6"); document.getElementById("c6").innerHTML = "Copied!";'>COPY 
+              <svg xmlns="http://www.w3.org/2000/svg" width="1.6rem" height="1.5rem" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div><br/>
         <div class="container-fluid border border-dark">
-          <div class="card">
-            <div class="card-header">
-              <h4>Input Parameters</h4></div>
-            <div class="card-title">&nbsp;
-                <h5 >Parameter Format</h5>
-            </div>
-            <div class="card-body">
-              <p>The input parameter must be sent using HTTP GET. Care should be taken to URL-encode the parameter correctly. Malformed parameter will either be incorrectly interpreted and or give rise to unexpected results. 
-              The parameter used is a multi-valued parameter and doesn't have a name.</p>
-              <div class="card-title">
-                <h5>Query parameters</h5>
+            <div class="card">
+              <div class="card-header">
+                <h4>Authorization</h4>
               </div>
+              <div class="card-body">
+                <p>A user is authorized by their api token, the api token is sent along with the api request, which the system verifies, and return</p>
+                <p>search data to the user. Your api token is available on the top of this page.</p>
+              </div>
+            </div>
+        </div><br/>
+        <div class="container-fluid border border-dark">
+            <div class="card">
+              <div class="card-header">
+                <h4>Input Parameters</h4>
+              </div>
+              <div class="card-title">&nbsp;
+                  <h5 >Parameter Format</h5>
+              </div>
+              <div class="card-body">
+                <p>The input parameter must be sent using HTTP GET. Care should be taken to URL-encode the parameter correctly. Malformed parameter will either be incorrectly interpreted and or give rise to unexpected results. 
+                The parameter used is a multi-valued parameter and doesn't have a name.</p>
+              
+                <div class="card-title">
+                 <h5>Query parameters</h5>
+                </div>
+                
               <table class="table table-border">
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Example</th>
-                  <th scope="col">Results in</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">search</th>
-                  <td>Location</td>
-                  <td>api/v1.0/jobs?search=Hyderabad</td>
-                  <td>The list of available jobs in <b>Hyderabad</b></td>
-                </tr>
-                <tr>
-                  <th scope="row">search</th>
-                  <td>skill</td>
-                  <td>api/v1.0/jobs?search=python</td>
-                  <td>The list of available jobs requiring <b>python skill</b></td>
-                </tr>
-                <tr>
-                  <th scope="row">search</th>
-                  <td>position</td>
-                  <td>api/v1.0/jobs?search=full-stack-developer</td>
-                  <td>The list of available jobs with position as <b>Full-stack-developer</b></td>
-                </tr>
-                <tr>
-                  <th scope="row">search</th>
-                  <td>Organisation</td>
-                  <td>api/v1.0/jobs?search=Infosys</td>
-                  <td>The list of available jobs at <b>Infosys</b></td>
-                </tr>
-                <tr>
-                  <th scope="row">search</th>
-                  <td>Applied jobs</td>
-                  <td>api/v1.0/jobs?search=appliedjobs</td>
-                  <td>The list of applied jobs and their status</td>
-                </tr>
-                <tr>
-                  <th scope="row">apply</th>
-                  <td>Apply for a job</td>
-                  <td>api/v1.0/jobs?apply=2349</td>
-                  <td>Apply to the job that has the unique id 2349</td>
-                </tr>              
-              </tbody>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Example</th>
+                    <th scope="col">Results in</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">search</th>
+                    <td>Location</td>
+                    <td>api/v1.0/jobs?search=Hyderabad</td>
+                    <td>The list of available jobs in <b>Hyderabad</b></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">search</th>
+                    <td>skill</td>
+                    <td>api/v1.0/jobs?search=python</td>
+                    <td>The list of available jobs requiring <b>python skill</b></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">search</th>
+                    <td>position</td>
+                    <td>api/v1.0/jobs?search=full-stack-developer</td>
+                    <td>The list of available jobs with position as <b>Full-stack-developer</b></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">search</th>
+                    <td>Organisation</td>
+                    <td>api/v1.0/jobs?search=Infosys</td>
+                    <td>The list of available jobs at <b>Infosys</b></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">search</th>
+                    <td>Applied jobs</td>
+                    <td>api/v1.0/jobs?search=appliedjobs</td>
+                    <td>The list of applied jobs and their status</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">apply</th>
+                    <td>Apply for a job</td>
+                    <td>api/v1.0/jobs?apply=2349</td>
+                    <td>Apply to the job that has the unique id 2349</td>
+                  </tr>              
+                </tbody>
               </table>
-            </div>
-          </div>
-        </div><br/>
-
-        <div class="container-fluid border border-dark">
-          <div class="card">
-            <div class="card-header">
-              <h4>Output Response</h4>
-            </div>
-              <div class="card-title">
-              <h4>Media Type</h4>
               </div>
-              <p>Only JSON format is currently supported.</p>
-            <div class="card-body">
-              <code><pre>
-                HTTP/1.1 200 OK
-                Content-Type: application/json
-                Date: Sat, 15 May 2021 09:46:36 GMT
-                Server: Werkzeug/2.0.0 Python/3.9.5
-                X-Vcap-Request-Id: 107f42ae-4669-494a-72a9-939c11476920
-                Content-Length: 988
-                Connection: keep-alive
-
-                {
-                  "joboffers": {
-                    "Desc ": "Available job offers for'python'",
-                    "jobs": [
-                      {
-                        "Company": "GOOGLE",
-                        "Role": "CEO",
-                        "Location": "Jadcherla",
-                        "Skill reqirement": "python,",
-                        "Salary": 50000,
-                        "Status": "open",
-                        "Posted on": "Wed, 04 May 2022 00:00:00 GMT",
-                        "Unique Id": 1
-                      },
-                      {
-                        "Company": "Wipro",
-                        "Role": "Full stack Developer",
-                        "Location": "Hyderabad",
-                        "Skill reqirement": "HTML,CSS,Python,Flask",
-                        "Salary": 50000,
-                        "Status": "open",
-                        "Posted on": "Tue, 05 Apr 2022 00:00:00 GMT",
-                        "Unique Id": 5
-                      },
-                      {
-                        "Company": "Google",
-                        "Role": "Data Scientist",
-                        "Location": "Hyderabad",
-                        "Skill reqirement": "Stastics, python, spark,hadoop",
-                        "Salary": 50000,
-                        "Status": "open",
-                        "Posted on": "Mon, 03 Jan 2022 00:00:00 GMT",
-                        "Unique Id": 6
-                      }
-                    ]
-                  }
-                }
-              </pre></code>
             </div>
-          </div>
         </div><br/>
-
         <div class="container-fluid border border-dark">
-          <div class="card">
-            <div class="card-header">
-              <h4>Error Messages</h4>
-            </div>
-            <div class="card-body">
-              <code>
-                <p>If you try to access the api from a browser without api token.</p>
+            <div class="card">
+              <div class="card-header">
+                <h4>Output Response</h4>
+              </div>
+              <div class="card-title">
+                <h4>Media Type</h4>
+              </div>
+                <p>Only JSON format is currently supported.</p>
+              <div class="card-body">
+                <code>
                   <pre>
-                    {
-                      "error": "Unauthorized access"
+                  HTTP/1.1 200 OK
+                  Content-Type: application/json
+                  Date: Sat, 15 May 2021 09:46:36 GMT
+                  Server: Werkzeug/2.0.0 Python/3.9.5
+                  X-Vcap-Request-Id: 107f42ae-4669-494a-72a9-939c11476920
+                  Content-Length: 988
+                  Connection: keep-alive
+
+                  {
+                    "joboffers": {
+                      "Desc ": "Available job offers for'python'",
+                      "jobs": [
+                        {
+                          "Company": "GOOGLE",
+                          "Role": "CEO",
+                          "Location": "Jadcherla",
+                          "Skill reqirement": "python,",
+                          "Salary": 50000,
+                          "Status": "open",
+                          "Posted on": "Wed, 04 May 2022 00:00:00 GMT",
+                          "Unique Id": 1
+                        },
+                        {
+                          "Company": "Wipro",
+                          "Role": "Full stack Developer",
+                          "Location": "Hyderabad",
+                          "Skill reqirement": "HTML,CSS,Python,Flask",
+                          "Salary": 50000,
+                          "Status": "open",
+                          "Posted on": "Tue, 05 Apr 2022 00:00:00 GMT",
+                          "Unique Id": 5
+                        },
+                        {
+                          "Company": "Google",
+                          "Role": "Data Scientist",
+                          "Location": "Hyderabad",
+                          "Skill reqirement": "Stastics, python, spark,hadoop",
+                          "Salary": 50000,
+                          "Status": "open",
+                          "Posted on": "Mon, 03 Jan 2022 00:00:00 GMT",
+                          "Unique Id": 6
+                        }
+                      ]
                     }
+                  }
                   </pre>
-                <p>When the api token used is incorrect,</p>
-                  <pre>
-                    HTTP/1.0 403 FORBIDDEN
-                    Content-Type: application/json
-                    Content-Length: 37
-                    WWW-Authenticate: Basic realm="Authentication Required"
-                    Server: Werkzeug/1.0.1 Python/3.8.5
-                    Date: Tue, 11 May 2021 08:19:25 GMT
-      
-                    {
-                      "error": "Unauthorized access"
-                    }
-                  </pre>
-              </code>
+                </code>
+              </div>
             </div>
-          </div>
         </div><br/>
-      </div>
-      <footer class="page-footer font-small bg-dark text-white pt-4">
-        <div class="container-fluid text-center text-md-left">
-          <div class="row">
-            <div class="col-md-6 mt-md-0 mt-3">
-              <h5 class="text-uppercase">GetaJob</h5>
+        <div class="container-fluid border border-dark">
+            <div class="card">
+              <div class="card-header">
+                <h4>Error Messages</h4>
+              </div>
+              <div class="card-body">
+                <code>
+                  <p>If you try to access the api from a browser without api token.</p>
+                    <pre>
+                      {
+                        "error": "Unauthorized access"
+                      }
+                    </pre>
+                  <p>When the api token used is incorrect,</p>
+                    <pre>
+                      HTTP/1.0 403 FORBIDDEN
+                      Content-Type: application/json
+                      Content-Length: 37
+                      WWW-Authenticate: Basic realm="Authentication Required"
+                      Server: Werkzeug/1.0.1 Python/3.8.5
+                      Date: Tue, 11 May 2021 08:19:25 GMT
+                    
+                      {
+                        "error": "Unauthorized access"
+                      }
+                    </pre>
+                </code>
+              </div>
+            </div>
+        </div><br/>
+    </div>
+
+    <!-- footer -->
+    <footer class="page-footer font-small bg-dark text-white pt-4">
+      <div class="container-fluid text-center text-md-left">
+        <div class="row">
+          <div class="col-md-6 mt-md-0 mt-3">
+            <h5 class="text-uppercase">GetaJob</h5>
               <p>A place to find your dreams.</p>
-            </div>
+          </div>
             <hr class="clearfix w-100 d-md-none pb-3">
-            <div class="col-md-3 mb-md-0 mb-3">
-              <h5 class="text-uppercase">Explore</h5>
-      
-              <ul class="list-unstyled">
-                <li>
-                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
-                </li>
-                <li>
-                  <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
-                </li>
-              </ul>
-            </div>
-            <div class="col-md-3 mb-md-0 mb-3">
-              <h5 class="text-uppercase">Support</h5>
-      
-              <ul class="list-unstyled">
-                <li>
-                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/issues" target="_blank">Feedback</a>
-                </li>
-                <li>
-                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-" target="_blank">Contribute</a>
-                </li>
-              </ul>
-            </div>
+          <div class="col-md-3 mb-md-0 mb-3">
+            <h5 class="text-uppercase">Explore</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+              </li>
+              <li>
+                <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="col-md-3 mb-md-0 mb-3">
+            <h5 class="text-uppercase">Support</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/issues" target="_blank">Feedback</a>
+              </li>
+              <li>
+                <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-" target="_blank">Contribute</a>
+              </li>
+            </ul>
           </div>
         </div>
-        <!-- Footer Links -->
-        <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">© 2021 Copyright :
-          <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
-          <a href="{{url_for('tc')}}" target="_blank">Terms of Service  | Privacy Policy </a>
-        </div>
-      </footer>
+      </div>
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">© 2021 Copyright :
+        <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
+        <a href="{{url_for('tc')}}" target="_blank">Terms of Service  | Privacy Policy </a>
+      </div>
+    </footer>
+      
+    <!--bootstrap Sources-->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+       integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+     </script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+       integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous">
+     </script>
+     <script src="js/extention/choices.js"></script>
     
-      <!--bootstrap Sources-->
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-      </script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous">
-      </script>
-      <script src="js/extention/choices.js"></script>
-      <!-- Chat bot script -->
-      <script>
-        window.watsonAssistantChatOptions = {
-            integrationID: "c685c522-84a3-48bb-9fca-57b9a3e12905", // The ID of this integration.
-            region: "us-east", // The region your integration is hosted in.
-            serviceInstanceID: "1b8a0ba9-3af4-460d-9122-e849d725507c", // The ID of your service instance.
-            onLoad: function(instance) { instance.render(); }
-          };
-        setTimeout(function(){
-          const t=document.createElement('script');
-          t.src="https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js";
-          document.head.appendChild(t);
-        });
-      </script>
-      <script>
-      function openCity(evt, cityName) {
-        // Declare all variables
-        var i, tabcontent, tablinks;
-      
-        // Get all elements with class="tabcontent" and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
+     <!-- Chat bot script -->
+     <script>
+       window.watsonAssistantChatOptions = {
+           integrationID: "c685c522-84a3-48bb-9fca-57b9a3e12905", // The ID of this integration.
+           region: "us-east", // The region your integration is hosted in.
+           serviceInstanceID: "1b8a0ba9-3af4-460d-9122-e849d725507c", // The ID of your service instance.
+           onLoad: function(instance) { instance.render(); }
+         };
+       setTimeout(function(){
+         const t=document.createElement('script');
+         t.src="https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js";
+         document.head.appendChild(t);
+       });
+     </script>
+     <script>
+       function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
         }
-      
-        // Get all elements with class="tablinks" and remove the class "active"
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-      
-        // Show the current tab, and add an "active" class to the link that opened the tab
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-      }</script>
-</body>
+     </script>
+  </body>
 </html>

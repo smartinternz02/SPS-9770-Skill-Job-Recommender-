@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GETaJob</title>
+  <link rel="shortcut icon" type="image/x-icon" href={{ url_for("static", filename="logo1.ico") }}>
+  <style>
+   @media (max-width: 768px) {
+    .carousel-inner .carousel-item > div {
+        display: none;
+    }
+    .carousel-inner .carousel-item > div:first-child {
+        display: block;
+    }
+}
+
+.carousel-inner .carousel-item.active,
+.carousel-inner .carousel-item-next,
+.carousel-inner .carousel-item-prev {
+    display: flex;
+}
+
+/* display 3 */
+@media (min-width: 768px) {
+    
+    .carousel-inner .carousel-item-right.active,
+    .carousel-inner .carousel-item-next {
+      transform: translateX(33.333%);
+    }
+    
+    .carousel-inner .carousel-item-left.active, 
+    .carousel-inner .carousel-item-prev {
+      transform: translateX(-33.333%);
+    }
+}
+
+.carousel-inner .carousel-item-right,
+.carousel-inner .carousel-item-left{ 
+  transform: translateX(0);
+}
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
+        </li>
+        <li class="nav-item">
+            <li class="nav-item active col-md-2">
+            <a class="nav-link" href="{{url_for('empLogin')}}">Employers</a>
+        </li>
+      </ul>
+    </div>
+  </nav>  <br/>
+
+  <div class="container-fluid my-3">
+    <!-- Error message displays if msg variable has data in it, notifies of job application and accessing errors -->
+    <div class="alert alert-primary" role="alert"{{'hidden' if not msg}}>{{msg if msg}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- Page container starts here -->
+    <div class="container-fluid border border-dark">
+        <h3>Job Applications</h3>
+        <div class="card-columns">
+            {% for n in range(1,postedjobs[0]+1) %}
+            <div class="card">
+                <div class="card-header">
+                    <p>For the Role of :<b> {{postedjobs[n]['Position']}}</b></p><hr>
+                    <p>At the Location :<b> {{postedjobs[n]['Location']}}</b></p><hr>
+                    <form name="closejob" method="POST" action="/closejob">
+                        <input type="text" value="{{postedjobs[n]['Unique Id ']}}" name="closejob_id" hidden>
+                        <center><input type="submit" class="btn btn-outline-danger" value="Close Job"></center>
+                    </form>
+                </div>
+                <div class="card-body">
+                    {{'No applications received!' if not applications[n-1][postedjobs[n]['Unique Id ']]}}
+                    <table class="table table-striped table-sm" {{'hidden' if not applications[n-1][postedjobs[n]['Unique Id ']] else ""}}>
+                        <tbody>
+                            <tr>
+                                <th scope="row"></th>
+                                <td>App Id </td>
+                                <td>Applicant </td>
+                                <td>Status</td>
+                              </tr>
+                            {% for applica in applications[n-1][postedjobs[n]['Unique Id ']] %}
+                            <tr>
+                              <th scope="row"></th>
+                              <td>{{applica['Application Id']}}</td>
+                              <td><a target="_blank" href="/applicant/{{applica['Applicant']}}">{{applica['Applicant']}}</a></td>
+                              <td>
+                                  <div class="btn-group" id="{{applica['Application Id']}}">
+                                        <a target="_blank" href="/approvejob?id={{applica['Application Id']}}">
+                                            <button class="btn btn-outline-success btn-sm" onclick='document.getElementById("{{applica["Application Id"]}}").innerHTML ="<center><button disabled>Approved</button></center>";'>
+                                                Approve
+                                            </button>
+                                            </a> &nbsp;
+                                        <a target="_blank" href="/rejectjob?id={{applica['Application Id']}}">
+                                            <button class="btn btn-outline-danger btn-sm" onclick='document.getElementById("{{applica["Application Id"]}}").innerHTML = "<center><button disabled>Rejected</button></center>";'>
+                                                Reject
+                                            </button>
+                                        </a>
+                                  </div>
+                              </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div><br/>
+    <!-- Footer -->
+    <footer class="page-footer font-small bg-dark text-white pt-4">
+        <div class="container-fluid text-center text-md-left">
+          <div class="row">
+            <div class="col-md-6 mt-md-0 mt-3">
+              <h5 class="text-uppercase">GetaJob</h5>
+              <p>A place to find your dreams.</p>
+            </div>
+            <hr class="clearfix w-100 d-md-none pb-3">
+            <div class="col-md-3 mb-md-0 mb-3">
+              <h5 class="text-uppercase">Explore</h5>
+      
+              <ul class="list-unstyled">
+                <li>
+                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+                </li>
+                <li>
+                  <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3 mb-md-0 mb-3">
+              <h5 class="text-uppercase">Support</h5>
+      
+              <ul class="list-unstyled">
+                <li>
+                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/issues" target="_blank">Feedback</a>
+                </li>
+                <li>
+                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-" target="_blank">Contribute</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Footer Links -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">© 2021 Copyright :
+          <a href="{{url_for('home')}}" target="_blank"> GetaJob Inc</a> | All rights reserved |
+          <a href="{{url_for('tc')}}" target="_blank">Terms of Service | Privacy Policy </a>
+        </div>
+      </footer>
+    
+      <!--bootstrap Sources-->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous">
+      </script>
+      <script src="js/extention/choices.js"></script>
+    </body>
+    </html>
