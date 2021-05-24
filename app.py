@@ -74,6 +74,14 @@ def forgotpassword():
 def tc():
     return render_template('TermsConditions.html')
 
+@app.route('/documentation',methods=["POST","GET"])
+def documentation():
+    return render_template('documentation.html')
+
+@app.route('/empdocumentation',methods=["POST","GET"])
+def empdocumentation():
+    return render_template('empdocumentation.html')
+
 @app.route('/loginpage')
 def loginpage():
     return render_template('login.html')
@@ -95,6 +103,8 @@ def emlogin():
             msg='We are facing issues, Please try after sometime!'
             return render_template('empLogin.html',msg=msg)
         if account:
+            session['loggedin'] = True
+            session['id'] = account[1]
             Organisation=account[0]
             cursor.execute('SELECT jobid,position,location,status,dateposted FROM availjobs WHERE organization = % s AND status = "open"',(Organisation,),)
             postedjobs=[]
@@ -367,7 +377,7 @@ def search():
         searchtext=request.form['searchtext']
         searchtext=searchtext.lower()
     if request.method == 'GET':
-        category='na'
+        category='roleorg'
         searchtext=request.args.get('searchtext')
         searchtext=searchtext.lower()
     cursor = mysql.connection.cursor()
@@ -382,6 +392,8 @@ def search():
             elif category == 'suggestions':
                 searchtext=searchtext.split(',')
                 cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%"+searchtext[3]+"%","%"+searchtext[0]+"%","%"+searchtext[1]+"%",))
+            elif category == 'roleorg':
+                cursor.execute("SELECT * FROM availjobs WHERE position LIKE %s OR organization LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%",))
             else :
                 cursor.execute("SELECT * FROM availjobs WHERE skills LIKE % s OR position LIKE % s OR location LIKE % s AND status='open'",("%"+searchtext+"%","%"+searchtext+"%","%"+searchtext+"%",))
         except Exception as e:
@@ -405,6 +417,10 @@ def applyjob():
         today=date.today()
         cursor = mysql.connection.cursor()
         try:
+            cursor.execute("SELECT appid FROM appliedjobs WHERE jobid= % s",(jobid,),)
+            if cursor.rowcount:
+                msg='You have already applied for this job, check status from profile!'
+                return render_template('main.html',msg=msg,joboffers=session['joboffers'])
             cursor.execute("INSERT INTO appliedjobs(jobid,userid,status,appliedon) VALUES (% s, % s, % s, % s)", (jobid,usermail,'pending',today))
             mysql.connection.commit()
             msg='Your application is received!'
@@ -413,7 +429,7 @@ Hi {session['username']},
 
 Thank you for applying to the role of {pos} at {org}. 
 
-Iam happy to announce that your application for the role of {pos}
+We are happy to announce that your application for the role of {pos}
 at {org} is received. All further communication will be from {org}.
 If you are among the qualified candidates, you will receive  communication
 from  the recruiters of {org} to schedule a virtual interview. 
@@ -478,8 +494,13 @@ def get_jobs():
             jobs=job[0]+" is offering the role of "+job[1]+" at "+job[2]+"."
             #jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
             joboffer.append(jobs)
+        if not cursor.rowcount:
+            joboffers.append(jobs)
         if cursor.rowcount==1:
             joboffer.append(jobs)
+        if not cursor.rowcount:
+            jobs="Sorry, currently there are no job openings for your profile!"
+            joboffers.append(jobs)
         applylink='<style>.buton{background: none!important;border: none;padding: 0!important;color: #069;text-decoration: underline;cursor: pointer; }</style>'
         applylink+='<form action="/search" method="post"><input type="text" value="'+searchtext+'"name="searchtext" hidden><input type="text" value="job" name="category" hidden><input type="submit" class="buton" value="Apply here"></form>'
         joboffer.append(applylink)
@@ -509,7 +530,7 @@ Hello user,
 
 Thank you for applying to the role of {pos} at {org}. 
 
-Iam happy to announce that your application for the role of {pos}
+We are happy to announce that your application for the role of {pos}
 at {org} is received. All further communication will be from {org}.
 If you are among the qualified candidates, you will receive  communication
 from  the recruiters of {org} to schedule a virtual interview.
