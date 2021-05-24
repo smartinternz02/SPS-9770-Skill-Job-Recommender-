@@ -14,7 +14,7 @@
           <p>
             These terms govern use of the website <a href="{{url_for('home')}}">getajob.com</a>.
           </p><hr>
-            <img src="./../static/tc.jpg" style="width:40vw;height:20vw;">
+            <img src="./../static/tc.jpg" style="width:40vw;height:20vw;" alt="Two people shaking hands as an Agreement">
         </center><hr>
         <br/>
           <div class="card">
@@ -225,10 +225,13 @@
       
               <ul class="list-unstyled">
                 <li>
-                  <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+                  <a class="nav-link" href="{{url_for('documentation')}}">Website Documentation</a>
                 </li>
                 <li>
-                  <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+                  <a href="{{url_for('learn')}}">Learning Resources</a>
+                </li>
+                <li>
+                  <a href="{{url_for('apipage')}}">API Documentation</a>
                 </li>
               </ul>
             </div>

@@ -51,11 +51,23 @@
 
 <body class="bg-secondary">
     <!-- Page Header -->
-    <div class="card">
-        <div class="card-title">
-            <h3>GETAJOB</h3>
-        </div>
-    </div>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                  <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active col-md-2">
+                  <a class="nav-link text-white" href="{{url_for('documentation')}}">Documentation</a> 
+                </li>
+              </ul>
+            </div>
+        </nav><br/>
 
     <!-- Sign up banner -->
     <div class="card">
@@ -228,15 +240,18 @@
                         placeholder="C, C++, Java, Kotlin, Python, JavaScript, HTML, Bootstrap, etc"
                         required></textarea><br />
 
-                    <label for="inputAddress">Github Portfolio Link </label><span class="required">*</span>
+                    <label for="inputAddress">Github Portfolio Link </label><span class="required">*</span><br/>
+                    <small>Please create a github account if you don't have one. <a href="https://github.com/join">Click here</a></small>
                     <input type="text" name="git" class="form-control" id="inputEmail4" tabindex="19" required> <br />
 
-                    <label for="inputAddress">Worked previously @</label>
+                    <label for="inputAddress">Worked previously @</label><br/>
+                    <small>Enter "Fresher" if you are.</small>
                     <textarea class="form-control" name="workedAt" rows=2 tabindex="20"
                         placeholder="SAP Business-Systems Analyst, Supply Chain & Finance,Google Hyderabad, Telangana."
                         value="Fresher"></textarea><br />
 
-                    <label for="workExperience">Total years of Work Experience</label><span class="required">*</span>
+                    <label for="workExperience">Total years of Work Experience</label><span class="required">*</span><br/>
+                    <small>Enter "0" if you are a fresher</small>
                     <input type="number" min="0" max="15" name="workExp" tabindex="21" class="form-control"> </br>
 
                     <div class="form-group form-check">
@@ -266,12 +281,14 @@
                     <h5 class="text-uppercase">Explore</h5>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md"
-                                target="_blank">Documentation</a>
-                        </li>
-                        <li>
-                            <a href="/apipage" target="_blank">API Documentation</a>
-                        </li>
+                            <a class="nav-link" href="{{url_for('documentation')}}">Website Documentation</a>
+                          </li>
+                          <li>
+                            <a href="{{url_for('learn')}}">Learning Resources</a>
+                          </li>
+                          <li>
+                            <a href="{{url_for('apipage')}}">API Documentation</a>
+                          </li>
                     </ul>
                 </div>
                 <div class="col-md-3 mb-md-0 mb-3">

@@ -37,7 +37,8 @@
             href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
         </li>
         <li class="nav-item active col-md-2">
-          <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> </li>
+          <a class="nav-link text-white" href="{{url_for('empLogin') if not session['loggedin'] else url_for('documentation')}}">{{'Documentation' if session['loggedin'] else 'For Employers'}}</a> 
+        </li>
       </ul>
     </div>
   </nav>  <br/>
@@ -105,7 +106,7 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="d-flex flex-column align-items-center text-center">
-                        <img src="{{'https://bootdey.com/img/Content/avatar/avatar7.png' if userdetails[2]=='M' else 'https://bootdey.com/img/Content/avatar/avatar3.png'}}" alt="Admin" class="rounded-circle" width="150">
+                        <img src="{{'https://bootdey.com/img/Content/avatar/avatar7.png' if userdetails[2]=='M' else 'https://bootdey.com/img/Content/avatar/avatar3.png'}}" alt="Avatar" class="rounded-circle" width="150">
                         <div class="mt-3">
                           <h4>{{userdetails[1]}}</h4>
                           <p class="text-secondary mb-1">{{userdetails[4]}}</p>
@@ -148,9 +149,9 @@
                               <tr>
                                 <td>{{appliedjobs[n]['Organisation']}}</td>
                                 <td>{{appliedjobs[n]['Position']}}</td>
-                                <td style="color:{{'darkcyan' if appliedjobs[n]['Status']=='pending'}}
-                                                {{'chartreuse' if appliedjobs[n]['Status']=='approved'}}
-                                                {{'crimson' if appliedjobs[n]['Status']=='rejected'}}";>
+                                <td style="color:{{'darkcyan' if appliedjobs[n]['Status']=='Pending'}}
+                                                {{'chartreuse' if appliedjobs[n]['Status']=='Approved'}}
+                                                {{'crimson' if appliedjobs[n]['Status']=='Rejected'}}";>
                                   {{appliedjobs[n]['Status']}}
                                 </td>
                               </tr>
@@ -264,10 +265,13 @@
         
                 <ul class="list-unstyled">
                   <li>
-                    <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+                    <a class="nav-link" href="{{url_for('documentation')}}">Website Documentation</a>
                   </li>
                   <li>
-                    <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+                    <a href="{{url_for('learn')}}">Learning Resources</a>
+                  </li>
+                  <li>
+                    <a href="{{url_for('apipage')}}">API Documentation</a>
                   </li>
                 </ul>
               </div>

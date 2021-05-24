@@ -8,6 +8,23 @@
       <link rel="shortcut icon" type="image/x-icon" href={{ url_for("static", filename="logo1.ico") }}>
   </head>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active col-md-2">
+            <a class="nav-link text-white" href="{{url_for('documentation')}}">Documentation</a> 
+          </li>
+        </ul>
+      </div>
+    </nav><br/>
     <div class="container-fluid border border-dark">
       <form class="card mt-4" method="POST" action="/forgotpass">
         <div class="card-body">
@@ -39,10 +56,13 @@
             <h5 class="text-uppercase">Explore</h5>
             <ul class="list-unstyled">
               <li>
-                <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+                <a class="nav-link" href="{{url_for('documentation')}}">Website Documentation</a>
               </li>
               <li>
-                <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+                <a href="{{url_for('learn')}}">Learning Resources</a>
+              </li>
+              <li>
+                <a href="{{url_for('apipage')}}">API Documentation</a>
               </li>
             </ul>
           </div>

@@ -110,7 +110,7 @@
               href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
           </li>
           <li class="nav-item active col-md-2">
-            <a class="nav-link" href="{{url_for('empLogin')}}">Employers</a> 
+            <a class="nav-link text-white" href="{{url_for('empLogin') if not session['loggedin'] else url_for('documentation')}}">{{'Documentation' if session['loggedin'] else 'For Employers'}}</a> 
           </li>
         </ul>
       </div>
@@ -225,73 +225,28 @@
       <h5>Job Gallery</h5>
         <!-- Tab header -->
         <div class="tab">
-          <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'joborgs')">Available Jobs By Roles</button>
-          <button class="tablinks" onclick="openCity(event, 'jobroles')">Available Jobs by Organisations</button>
+          <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'jobroles')">Available Jobs By Roles</button>
+          <button class="tablinks" onclick="openCity(event, 'joborgs')">Available Jobs by Organisations</button>
         </div>
 
-        <!-- Tab content of Job organisations -->
-        <div id="joborgs" class="tabcontent">
-          <div class="card-deck">
-            <div class="card">
-              <div class="card-body">
-                <ul>
-                <li><a href="{{url_for('search',searchtext='android')}}">Android Developer</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Application Progrrammer</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Cartoonist</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Data Scientist</a></li>
-                </ul>
-                <!--Display only a single card if short screen -->
-                <div class="d-lg-none">
-                  <ul>
-                    <li>
-                    <li><a href="{{url_for('search',searchtext='')}}">Full stack developer</a></li>
-                    <li><a href="{{url_for('search',searchtext='')}}">Machine Learning</a></li>
-                    <li><a href="{{url_for('search',searchtext='')}}">Python7</a></li>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="card d-none d-lg-block">
-              <div class="card-body">
-                <ul>
-                <li><a href="{{url_for('search',searchtext='')}}">Python11</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python12</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python13</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python14</a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="card d-none d-lg-block">
-              <div class="card-body">
-                <ul>
-                  <li><a href="{{url_for('search',searchtext='')}}">Python21</a></li>
-                  <li><a href="{{url_for('search',searchtext='')}}">Python22</a></li>
-                  <li><a href="{{url_for('search',searchtext='')}}">Python23</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Tab content of Job  ROLES -->
+        <!-- Tab content of Job Roles-->
         <div id="jobroles" class="tabcontent">
           <div class="card-deck">
             <div class="card">
               <div class="card-body">
                 <ul>
-                <li><a href="{{url_for('search',searchtext='')}}">Python1</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python2</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python3</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python4</a></li>
+                  <li><a href="{{url_for('search',searchtext='android') if session['loggedin'] else url_for('loginpage')}}">Android Developer</a></li>
+                  <li><a href="{{url_for('search',searchtext='programmer') if session['loggedin'] else url_for('loginpage')}}">Application Progrrammer</a></li>
+                  <li><a href="{{url_for('search',searchtext='backend') if session['loggedin'] else url_for('loginpage')}}">Backend Developer</a></li>
+                  <li><a href="{{url_for('search',searchtext='cloud') if session['loggedin'] else url_for('loginpage')}}">Cloud Roles</a></li>
                 </ul>
                 <!--Display only a single card if short screen -->
                 <div class="d-lg-none">
                   <ul>
-                    <li>
-                    <li><a href="{{url_for('search',searchtext='')}}">Python5</a></li>
-                    <li><a href="{{url_for('search',searchtext='')}}">Python6</a></li>
-                    <li><a href="{{url_for('search',searchtext='')}}">Python7</a></li>
-                    </li>
+                    <li><a href="{{url_for('search',searchtext='Data') if session['loggedin'] else url_for('loginpage')}}">Data Scientist</a></li>
+                     <li><a href="{{url_for('search',searchtext='full stack developer') if session['loggedin'] else url_for('loginpage')}}">Full stack developer</a></li>
+                    <li><a href="{{url_for('search',searchtext='network') if session['loggedin'] else url_for('loginpage')}}">Network Administrator</a></li>
+                    <li><a href="{{url_for('search',searchtext='System') if session['loggedin'] else url_for('loginpage')}}">System Engineer</a></li>
                   </ul>
                 </div>
               </div>
@@ -299,19 +254,62 @@
             <div class="card d-none d-lg-block">
               <div class="card-body">
                 <ul>
-                <li><a href="{{url_for('search',searchtext='')}}">Python11</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python12</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python13</a></li>
-                <li><a href="{{url_for('search',searchtext='')}}">Python14</a></li>
+                <li><a href="{{url_for('search',searchtext='data analyst') if session['loggedin'] else url_for('loginpage')}}">Data Analyst</a></li>
+                <li><a href="{{url_for('search',searchtext='data scientist') if session['loggedin'] else url_for('loginpage')}}">Data Scientist</a></li>
+                <li><a href="{{url_for('search',searchtext='full stack developer') if session['loggedin'] else url_for('loginpage')}}">Full Stack Developer</a></li>
+                <li><a href="{{url_for('search',searchtext='IT') if session['loggedin'] else url_for('loginpage')}}">IT support</a></li>
                 </ul>
               </div>
             </div>
             <div class="card d-none d-lg-block">
               <div class="card-body">
                 <ul>
-                  <li><a href="{{url_for('search',searchtext='')}}">Python21</a></li>
-                  <li><a href="{{url_for('search',searchtext='')}}">Python22</a></li>
-                  <li><a href="{{url_for('search',searchtext='')}}">Python23</a></li>
+                  <li><a href="{{url_for('search',searchtext='Java') if session['loggedin'] else url_for('loginpage')}}">Java Programmer</a></li>
+                  <li><a href="{{url_for('search',searchtext='network') if session['loggedin'] else url_for('loginpage')}}">Network Administrator</a></li>
+                  <li><a href="{{url_for('search',searchtext='system') if session['loggedin'] else url_for('loginpage')}}">System Engineer</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tab content of Job  Organisations-->
+        <div id="joborgs" class="tabcontent">
+          <div class="card-deck">
+            <div class="card">
+              <div class="card-body">
+                <ul>
+                  <li><a href="{{url_for('search',searchtext='accenture') if session['loggedin'] else url_for('loginpage')}}">Accenture</a></li>
+                  <li><a href="{{url_for('search',searchtext='amazon') if session['loggedin'] else url_for('loginpage')}}">Amazon</a></li>
+                  <li><a href="{{url_for('search',searchtext='cognizant') if session['loggedin'] else url_for('loginpage')}}">Cognizant</a></li>
+                  <li><a href="{{url_for('search',searchtext='capgemini') if session['loggedin'] else url_for('loginpage')}}">Capgemini</a></li>
+                </ul>
+                <!--Display only a single card if short screen -->
+                <div class="d-lg-none">
+                  <ul>
+                    <li><a href="{{url_for('search',searchtext='ibm') if session['loggedin'] else url_for('loginpage')}}">IBM</a></li>
+                     <li><a href="{{url_for('search',searchtext='infosys') if session['loggedin'] else url_for('loginpage')}}">Infosys</a></li>
+                    <li><a href="{{url_for('search',searchtext='vmware') if session['loggedin'] else url_for('loginpage')}}">VMware</a></li>
+                    <li><a href="{{url_for('search',searchtext='wipro') if session['loggedin'] else url_for('loginpage')}}">Wipro</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card d-none d-lg-block">
+              <div class="card-body">
+                <ul>
+                <li><a href="{{url_for('search',searchtext='hcl') if session['loggedin'] else url_for('loginpage')}}">HCL</a></li>
+                <li><a href="{{url_for('search',searchtext='ibm') if session['loggedin'] else url_for('loginpage')}}">IBM</a></li>
+                <li><a href="{{url_for('search',searchtext='Infosys') if session['loggedin'] else url_for('loginpage')}}">Infosys</a></li>
+                <li><a href="{{url_for('search',searchtext='larsen') if session['loggedin'] else url_for('loginpage')}}">Larsen & Turbo</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="card d-none d-lg-block">
+              <div class="card-body">
+                <ul>
+                  <li><a href="{{url_for('search',searchtext='mahindra') if session['loggedin'] else url_for('loginpage')}}">Tech Mahindra</a></li>
+                  <li><a href="{{url_for('search',searchtext='vmware') if session['loggedin'] else url_for('loginpage')}}">VMware</a></li>
+                  <li><a href="{{url_for('search',searchtext='wipro') if session['loggedin'] else url_for('loginpage')}}">Wipro</a></li>
                 </ul>
               </div>
             </div>
@@ -323,7 +321,7 @@
       <h3><span class="badge badge-warning">Resources</span></h3>
       <div class="row" style="background-color:azure;">&nbsp;&nbsp;&nbsp;
         <div class="column border border-dark rounded">
-          <img src="./../static/learningResource5.png" alt="IBM logo" style="width:100%">
+          <img src="./../static/learningResource5.png" alt="smartInternz logo" style="width:100%">
           <center>
             <div class="caption center-block">
               <a href="https://smartinternz.com/"><button type="submit" class="btn btn-info btn-block">Visit</button></a>
@@ -332,7 +330,7 @@
         </div> &nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/learningResource1.png" alt="Infosys logo" style="width:100%">
+          <img src="./../static/learningResource1.png" alt="freecodecamp-logo" style="width:100%">
             <div class="caption center-block">
               &nbsp;<a href="https://www.freecodecamp.org/learn/scientific-computing-with-python/"><button type="submit" class="btn btn-outline-primary btn-lg">Python</button></a>
               &nbsp;<a href="https://www.freecodecamp.org/learn/front-end-libraries/"><button type="submit" class="btn btn-outline-warning btn-lg">JS</button></a>
@@ -341,7 +339,7 @@
         </div>&nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/learningResource2.jpg" alt="vmware logo" style="width:100%">
+          <img src="./../static/learningResource2.jpg" alt="Kaggle logo" style="width:100%">
           <center>
             <div class="caption center-block">
               <a href="https://www.kaggle.com/"><button type="submit" class="btn btn-outline-primary btn-block">Data Science</button></a>
@@ -349,7 +347,7 @@
           </center>
         </div> &nbsp;
         <div class="column border border-dark rounded">
-          <img src="./../static/learningResource3.jpg" alt="vmware logo" style="width:100%">
+          <img src="./../static/learningResource3.jpg" alt="netcad-logo" style="width:100%">
           <center>
             <div class="caption center-block">
               <a href="https://www.netacad.com/courses/all-courses"><button type="submit" class="btn btn-outline-info btn-block">Learn</button></a>
@@ -358,7 +356,7 @@
         </div> &nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/learningResource4.png" alt="aws logo" style="width:100%">
+          <img src="./../static/learningResource4.png" alt="netdev Group logo" style="width:100%">
           <center>
             <div class="caption center-block">
               <a href="https://portal.netdevgroup.com/learn"><button type="submit" class="btn btn-outline-secondary btn-block">Visit</button></a>
@@ -395,10 +393,13 @@
             <h5 class="text-uppercase">Explore</h5>
             <ul class="list-unstyled">
               <li>
-                <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+                <a class="nav-link" href="{{url_for('documentation')}}">Website Documentation</a>
               </li>
               <li>
-                <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+                <a href="{{url_for('learn')}}">Learning Resources</a>
+              </li>
+              <li>
+                <a href="{{url_for('apipage')}}">API Documentation</a>
               </li>
             </ul>
           </div>

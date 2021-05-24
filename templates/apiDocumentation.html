@@ -38,7 +38,7 @@
               href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
           </li>
           <li class="nav-item active col-md-2">
-            <a class="nav-link" href="{{url_for('empLogin')}}">For Employers</a> 
+            <a class="nav-link" href="{{url_for('documentation')}}">Documentation</a> 
           </li>
         </ul>
       </div>
@@ -347,10 +347,13 @@
             <h5 class="text-uppercase">Explore</h5>
             <ul class="list-unstyled">
               <li>
-                <a href="https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-/blob/master/README.md" target="_blank">Documentation</a>
+                <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
               </li>
               <li>
-                <a href="{{url_for('apipage')}}" target="_blank">API Documentation</a>
+                <a class="nav-link" href="{{url_for('documentation')}}">Website Documentation</a>
+              </li>
+              <li>
+                <a href="{{url_for('learn')}}">Learning Resources</a>
               </li>
             </ul>
           </div>

@@ -179,15 +179,33 @@
             }
         }
       </style>
+      <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link " href="{{ url_for('empLogin')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active col-md-2">
+              <a class="nav-link text-white" href="{{url_for('empdocumentation')}}">Documentation</a> 
+            </li>
+          </ul>
+        </div>
+      </nav><br/>
       <div class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
         <div class="card card0 border-0">
             <div class="row d-flex">
                <div class="col-lg-6">
                     <div class="card1 pb-5">
-                        <div class="row"> <img src="./../static/logo2.png" class="logo">
+                        <div class="row"> <img src="./../static/logo2.png" alt="logo" class="logo">
                         </div>
                         <div class="row px-3 justify-content-center mt-4 mb-5 border-line">
-                            <img src="https://i.imgur.com/uNGdWHi.png" class="image">
+                            <img src="https://i.imgur.com/uNGdWHi.png" alt="Logo" class="image">
                         </div>
                     </div>
                 </div>
