@@ -97,6 +97,7 @@
                 <div class="form-group col-md-6">
                     <label for="usermail">Email</label><span class="required">*</span> <br />
                     <input type="email" name="usermail" class="form-control" tabindex="0" id="inputEmail4" required>
+                    <div class="invalid-feedback">Please enter a valid email Address.</div>
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
 
@@ -110,6 +111,7 @@
                             <input type="text" name="lastname" id="lastname" class="form-control" tabindex="2"
                                 placeholder="Last name" required>
                         </div>
+                        <div class="invalid-feedback">Please enter your first name and last name.</div>
                     </div></br>
 
                     <label for="gender">Gender</label><span class="required">*</span>
@@ -133,7 +135,9 @@
 
                     <label for="inputAge">Age</label><span class="required">*</span>
                     <input type="number" min="16" max="78" name="age" id="age" tabindex="4" class="form-control"
-                        required> <br />
+                        required>
+                        <div class="invalid-feedback">You should be above the age of 16 to work, go study now!</div>
+                        <br />
 
                     <label for="inputAddress">About Me</label><span class="required">*</span>
                     <textarea class="form-control" name="aboutme" id="aboutme" rows=2 tabindex="5"
@@ -145,7 +149,7 @@
                     <input type="text" name="city" class="form-control" id="inputAddress" tabindex="6"
                         placeholder="City Of Residence" required> <br />
                     <br>
-                    <button class="btn btn-success" onclick="formvalidation1()">Save</button>
+                    <button class="btn btn-success" onclick="formvalidation1()">Save & Next</button>
                 </div>
             </div>
 
@@ -163,7 +167,7 @@
                                 tabindex="8" placeholder="Name of the Institute" required>
                         </div>
                         <div class="col">
-                            <input type="number" name="gradGpa" id="gradGpa" class="form-control" min=40 max=99
+                            <input type="number" name="gradGpa" id="gradGpa" class="form-control" min=40 max=99 value="40"
                                 tabindex="9" placeholder="Percentage obtained" required>
                         </div>
                         <div class="col">
@@ -179,7 +183,7 @@
                                 class="form-control" placeholder="Name of the Institute" required>
                         </div>
                         <div class="col">
-                            <input type="number" class="form-control" name="sscGpa" id="sscGpa" tabindex="12" min=40
+                            <input type="number" class="form-control" name="sscGpa" id="sscGpa" tabindex="12" min=40 value="40"
                                 max=99 placeholder="Percentage obtained" required>
                         </div>
                         <div class="col">
@@ -195,7 +199,7 @@
                                 tabindex="14" placeholder="Name of the Institute" required>
                         </div>
                         <div class="col">
-                            <input type="number" name="HsclGpa" id="HsclGpa" class="form-control" min=40 max=99
+                            <input type="number" name="HsclGpa" id="HsclGpa" class="form-control" min=40 max=99 value="40"
                                 tabindex="15" placeholder="Percentage obtained" required>
                         </div>
                         <div class="col">
@@ -207,7 +211,7 @@
                     <label for="inputAddress">I'm Certified In</label>
                     <textarea class="form-control" name="CertifiedAin" rows=2 tabindex="17"
                         placeholder="Cisco Certified Network Associate" value="No certifications"></textarea></br>
-                    <button class="btn btn-success" onclick="formvalidation2()">Save</button>
+                    <button class="btn btn-success" onclick="formvalidation2()">Save & Next</button>
                 </div>
             </div>
 
@@ -236,7 +240,7 @@
                     <input type="number" min="0" max="15" name="workExp" tabindex="21" class="form-control"> </br>
 
                     <div class="form-group form-check">
-                        <input type="checkbox" name="tcCheck" class="form-check-input" tabindex="22" id="exampleCheck1">
+                        <input type="checkbox" name="tcCheck" class="form-check-input" tabindex="22" id="exampleCheck1" required>
                         <label class="form-check-label" for="exampleCheck1"><span class="required">*</span>
                             <small>I agree to the <a href="TermsConditions.html">terms and Conditions</a>.</small>
                         </label>
@@ -344,8 +348,8 @@
                     .getElementById("inputAddress").value && document.getElementById("aboutme").value) {
                     //if all fields are filled make the next tab clickable and display a msg.
                     document.getElementsByClassName('tablinks')[1].disabled = false;
-                    alert('You can move to Next Page!');
-
+                    //alert('You can move to Next Page!');
+                    openCity(event, 'education');
                 }
             } else {
                 alert('Please Fill Up the Required Fields!');
@@ -360,11 +364,10 @@
                 document.getElementById("HsclGpa").value && document.getElementById("HsclDate").value) {
 
                 document.getElementsByClassName('tablinks')[2].disabled = false;
-                alert('You can move to Next Page!');
+                //alert('You can move to Next Page!');
+                openCity(event, 'work');
             }
         }
     </script>
-
 </body>
-
 </html>
