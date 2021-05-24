@@ -11,12 +11,10 @@ from sendemail import sendmail
 from datetime import date
 import MySQLdb.cursors
 import re
-import io
 import hashlib
 import smtplib
 import secrets
 import string
-import csv
 
 app=Flask( __name__ )
 app.config['JSON_SORT_KEYS'] = False
@@ -480,7 +478,7 @@ def get_jobs():
             jobs=job[0]+" is offering the role of "+job[1]+" at "+job[2]+"."
             #jobs={"Company":job[0],"Role":job[1], "Location":job[2],"Skill reqirement":job[3],"Salary":job[4],"Status":job[5],"Posted on":job[6],"Unique Id":job[7]}
             joboffer.append(jobs)
-        if rowcount==1:
+        if cursor.rowcount==1:
             joboffer.append(jobs)
         applylink='<style>.buton{background: none!important;border: none;padding: 0!important;color: #069;text-decoration: underline;cursor: pointer; }</style>'
         applylink+='<form action="/search" method="post"><input type="text" value="'+searchtext+'"name="searchtext" hidden><input type="text" value="job" name="category" hidden><input type="submit" class="buton" value="Apply here"></form>'
@@ -621,8 +619,8 @@ def register():
             return render_template('signup.html',msg=msg)
         else:
             try:
-                cursor.execute("INSERT INTO login VALUES (% s, % s)", (usermail,passhash))
                 cursor.execute("INSERT INTO user VALUES(% s, %s, % s, % s, %s, % s, % s, % s, % s, % s, % s, % s, % s,% s)",(usermail,username,gender,age,aboutme,city,educ,certIn,skillset,git,workedAt,workExp,date.today(),degree))
+                cursor.execute("INSERT INTO login VALUES (% s, % s)", (usermail,passhash))
                 mysql.connection.commit()
                 msg = 'You are now registered with getAjob! Login to Continue. The password is sent to your mail.'
                 TEXT =f"""\
