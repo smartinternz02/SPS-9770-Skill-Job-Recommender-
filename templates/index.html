@@ -195,27 +195,33 @@
       <h3>Our Employers</h3>
       <div class="row ">&nbsp;&nbsp;&nbsp;
         <div class="column border border-dark rounded">
-          <img src="./../static/ibmlogo.png" alt="IBM logo" style="width:100%">
+          <a href="{{url_for('search',searchtext='ibm') if session['loggedin'] else url_for('loginpage')}}">
+          <img src="./../static/ibmlogo.png" alt="IBM logo" style="width:100%"></a>
         </div> &nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/infosyslogo.png" alt="Infosys logo" style="width:100%">
+          <a href="{{url_for('search',searchtext='infosys') if session['loggedin'] else url_for('loginpage')}}">
+          <img src="./../static/infosyslogo.png" alt="Infosys logo" style="width:100%"></a>
         </div>&nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/vmwarelogo.png" alt="vmware logo" style="width:100%">
+          <a href="{{url_for('search',searchtext='vmware') if session['loggedin'] else url_for('loginpage')}}">
+          <img src="./../static/vmwarelogo.png" alt="vmware logo" style="width:100%"></a>
         </div> &nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/accenturelogo.png" alt="vmware logo" style="width:100%">
+          <a href="{{url_for('search',searchtext='accenture') if session['loggedin'] else url_for('loginpage')}}">
+          <img src="./../static/accenturelogo.png" alt="vmware logo" style="width:100%"></a>
         </div> &nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/awslogo.png" alt="aws logo" style="width:100%">
+          <a href="{{url_for('search',searchtext='amazon') if session['loggedin'] else url_for('loginpage')}}">
+          <img src="./../static/awslogo.png" alt="aws logo" style="width:100%"></a>
         </div> &nbsp;
     
         <div class="column border border-dark rounded">
-          <img src="./../static/tech_mahindralogo.png" alt="Tech Mahindra" style="width:100%">
+          <a href="{{url_for('search',searchtext='mahindra') if session['loggedin'] else url_for('loginpage')}}">
+          <img src="./../static/tech_mahindralogo.png" alt="Tech Mahindra" style="width:100%"></a>
         </div> &nbsp;
       </div><br/>
     </div>
