@@ -671,7 +671,7 @@ def applyjob():
         today=date.today()
         cursor = mysql.connection.cursor()
         try:
-            cursor.execute("SELECT status FROM appliedjobs WHERE jobid= % s",(jobid,),)
+            cursor.execute("SELECT status FROM appliedjobs WHERE jobid= % s and userid= % s",(jobid,usermail,),)
             if cursor.rowcount:
                 status=cursor.fetchone()
                 msg='You have already applied for this job, and the status is '+status[0]+' !'
