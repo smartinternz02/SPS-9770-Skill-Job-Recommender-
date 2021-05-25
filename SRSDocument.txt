@@ -3,7 +3,7 @@ SKILL/JOB RECOMMENDER
 WEB APPLICATION
 Developed By         : Kantamsetti Mohan Durga Sathish (https://www.linkedin.com/in/mohan-durga-sathish-kantamsetti-a79897157)
 
-Walk Through     video    : getjobWalkThrough. 
+Walk Through     video    : getjobWalkThrough. (https://drive.google.com/file/d/1KUjNARF-3PYB-cPEdxcMEpSzLrxpiDIv/view)
 
 Source code @     : Github SmartInternz02 (https://github.com/smartinternz02/SPS-9770-Skill-Job-Recommender-)
 
