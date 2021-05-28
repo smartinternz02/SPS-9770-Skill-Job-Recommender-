@@ -8,40 +8,254 @@
   <link rel="shortcut icon" type="image/x-icon" href={{ url_for("static", filename="logo1.ico") }}>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white"
-                href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white"
-                href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white"
-                href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white"
-                href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
-            </li>
-            <li class="nav-item active col-md-2">
-              <a class="nav-link" href="{{url_for('documentation')}}">Documentation</a> 
-            </li>
-          </ul>
+  <style>
+    p,h3,h4,h5,tr{
+          text-indent: 1em;
+          color: #202124;
+          font-family: 'Google Sans', Roboto, sans-serif;
+        }
+        .row {
+      display: flex;
+      }
+    
+      .column {
+      flex: 14.33%;
+      padding: 5px;
+      }
+        /* Style the tab */
+      .tab {
+          overflow: hidden;
+          border: 1px solid #ccc;
+          background-color: #f1f1f1;
+        }       
+
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+          background-color: inherit;
+          float: left;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          padding: 14px 16px;
+          transition: 0.3s;
+        }       
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+          background-color: #ddd;
+        }       
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+          background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+          display: none;
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-top: none;
+        } 
+      .required
+      {
+        color: red;
+        }
+  </style>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('home')}}">GETAJOB</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link " href="{{ url_for('home')}}" uk-scroll="offset:50">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('dashboard') if session['loggedin'] else url_for('loginpage')}}">Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('apipage') if session['loggedin'] else url_for('loginpage')}}">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('logout') if session['loggedin'] else url_for('loginpage')}}">{{'Log Out' if session['loggedin'] else 'Log In'}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white"
+            href="{{ url_for('profile') if session['loggedin'] else url_for('loginpage')}}">{{'Profile' if session['loggedin'] else ''}}</a>
+        </li>
+        <li class="nav-item active col-md-2">
+          <a class="nav-link" href="{{url_for('documentation')}}">Documentation</a> 
+        </li>
+      </ul>
+    </div>
+  </nav><br/>
+  <div class="container-fluid border border-dark">
+    <center><h2>User Documentation</h2></center>
+    <div class="card">
+      <div class="card-header">
+        <p>GetJob is a skill job recommender app, wherein users can register with their education details and skills and get job recommendations.
+          The webapp has three interfaces for the users to interact with.</p>
+      </div>
+    <div class="card-body">
+      <h3>Registering as a Job seeker</h3>
+      <p>To use the services of the webapp, a user must have an account registered with the webapp. To register,</p>
+      <ol>
+        <li>On your browser, go to <a href="{{url_for('signup')}}">getjob.apps.pcfdev.in/signup</a></li>
+        <li>Fill your personal details like email, name, age, gender and city of residence.</li>
+        <li>Click on <code>Save & next</code>, after filling all the necessary details.</li>
+        <li>Fill your Educational details, then <code>Save & next</code>.</li>
+        <li>Fill in your Skills and Work Experience.</li>
+        <li>Click on <code>sign up</code> button to submit.</li>
+      </ol>
+      <p><b>Note</b>: You cannot set your own password, the webapp generates a secure 10 character alphanumeric password and sends it to your email,
+      the password is not stored on the server.<br/> Instead  passhash of the password is stored, so if you loose your password,
+      you'll have to <a href="{{url_for('forgotpassword')}}">reset</a> it.</p>
+      <p>You'll be redirected to the <a href="{{url_for('login')}}">login page</a>.</p><hr>
+      <h3>Logging in</h3>
+      <p>If you received your login credentials, or you already have an account, you can <a href="{{url_for('login')}}">login</a> to the webapp.</p>
+      <ol>
+        <li>On your computer go to <a href="{{url_for('login')}}">getjob.apps.pcfdev.in/login</a></li>
+        <li>The login form is displayed, enter your email that you used for registration.</li>
+        <li>Enter the 10 character password that you received via email, in the password box.</li>
+        <li>click on <code>login</code> button to login.</li>
+      </ol>
+      <p>If you lost your password, you can reset your password <a href="{{url_for('forgotpassword')}}">here</a>.</p><hr>
+      <h3>Resetting your password</h3>
+      <p>The secure password is emailed to the user, if the password is lost the user needs to reset it.</p>
+      <ol>
+        <li>On your browser, go to <a href="{{url_for('forgotpassword')}}">getjob.apps.pcfdev.in/forgotpassword</a></li>
+        <li>On the reset password page, enter your registered email.</li>
+        <li>Click on <code>reset passsword</code> button.</li>
+        <li>If you have an account, a new password will be sent to your email.</li>
+      </ol>
+      <p><b>NOTE</b>: If you don't have an account, a message is displayed on the login page, informing the same. You can register <a href="{{url_for('signup')}}">here</a>.</p>
+      <hr>
+      <!-- Tab header -->
+      <div class="tab">
+        <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'chatbot')">Chat Bot</button>
+        <button class="tablinks" onclick="openCity(event, 'apipage')">API Page</button>
+        <button class="tablinks" onclick="openCity(event, 'usrdashboard')">User Dashboard</button>
+        <button class="tablinks" onclick="openCity(event, 'mainpage')">Main Page</button>
+        <button class="tablinks" onclick="openCity(event, 'profilepage')">Profile Page</button>
+        <button class="tablinks" onclick="openCity(event, 'appliedjob')">Applied Job</button>
+      </div>
+      <!-- Tab content of user Dashboard -->
+      <div id="usrdashboard" class="tabcontent">
+      <h3>User Dashboard</h3>
+      <p>After <a href="{{url_for('login')}}">logging</a> to the webapp, the user's dashboard is displayed.</p>
+      <h4>Job Recommendations</h4>
+      <p>Job recommendations are displayed on the job page, whenever user logs into the webapp, these job recommendations are updated everytime. </p>
+      <h4>Using the search bar</h4>
+      <p> Users can use the search bar to look for jobs, which are displayed based on the user's profile.To search for a job,</p>
+      <ol>
+        <li>Click on the category drop down and select a category from skill, job or location.</li>
+        <li>Enter the search text in the search box.</li>
+        <li>Click on Search. To find jobs.</li>
+      </ol><hr>
+      </div>
+      <div id="mainpage" class="tabcontent">
+      <h3>Main page</h3>
+      <p>This is the <a href="{{url_for('home')}}">landing page</a> of the website.</p>
+      <h4>Our Employers</h4>
+      <p>The carousel lists our top employers, clicking on the images displays the jobs offered by the organization.</p>
+      <h4>Job Gallery</h4>
+      <h5>Jobs by roles</h5>
+      <p>Displays various roles offered by organisations, clicking on it, displays job openings for the role offered by various organisations.</p>
+      <h5>Jobs by organisations</h5>
+      <p>Displays various organisations offering jobs in the portal, clicking on it, displays all the job roles offered by the organisation.</p>
+      <h4>Learning Resources</h4>
+      <p>Third party Learning resources are displayed at the end of the page, which are update based on user's profile.</p>
+      <hr>
+      </div>
+      <div id="chatbot" class="tabcontent">
+        <h3>Chat bot</h3>
+        <p>User's can interact with the chatbot and get job recommendations for their skills.</p>
+        <ol>
+          <li>The chat bot is visible on all pages except the landing page of the website.</li>
+          <li>To chat with the bot, click on <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
+            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+          </svg> at the bottom of the page.</li>
+          <li>The bot can help you find 
+            <ul>
+              <li>Job recommendations for skills</li>
+              <li>Job application status</li>
+              <li>Api Documentation</li>
+              <li>Website Documentation</li>
+              <li>Provide Learning Resources</li>
+              <li>Greet and reply to nrml msgs</li>
+            </ul>
+          </li>
+          <li>The webpages and results can be accessed by clicking the buttons returned as msg from the chat.</li>
+        </ol>
+      </div>
+      <div id="apipage" class="tabcontent">
+        <p>GetJOB's Job Search api is a powerful api, exposed to the programmer through a simple HTTP interface.
+          Query parameters are sent via HTTP GET query and search results, errors and diagnostic information are 
+          returned as an JSON document to ther user. The same api interface serves the chatbot of the site.
+        </p>
+          <h4>URL :</h4>
+          <p><a href="http://getjob.apps.pcfdev.in/api/v1.0/jobs">http://getjob.apps.pcfdev.in/api/v1.0/jobs</a></p>
+          <h4>Examples :</h4>
+          <p>curl is free and open source command line software used to transfer data. Curl comes preinstalled on most of the devices. We will use curl to access the api.</p>
+          <p><code>curl -u {api token}:unused -i -X GET http://getjob.apps.pcfdev.in/v1.0/jobs?search=value</code></p>
+          <p><code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs?search=appliedjobs</code></br></p>
+          <p><code>curl -u {api token}:unused -i -X GET http://getjobwebapp.apps.pcfdev.in/api/v1.0/jobs?apply=uniquejobid</code></br></p>
+          <p>For more details refer to <a href="{{url_for('apipage') if session['loggedin'] else url_for('login')}}">api Documentation</a> page.</p><hr>  
         </div>
-      </nav><br/>
+      <div id="profilepage" class="tabcontent">
+      <h3>Profile page</h3>
+      <p>Profile page displays user's details which user has entered while regestering,this also displays user's application status.</p>
+      </div>
+      <div id="appliedjob" class="tabcontent">
+      <h3>Applied Jobs</h3>
+      <p>Clicking on show more under job status in profile, takes the user to the applied jobs where the status of all the applied jobs is displayed.</p>
+      </div><hr>
+      <h3>Applying For a job</h3>
+      <p>User's can use all the three interfaces(using webapp, chatbot and API) to get job recommendations and to apply for a job.</p>
+      <div class="row">
+        <div class="col">
+          <h4>Using the webapp</h4>
+          <p>The user can choose jobs from
+          <ul>
+            <li>Job <code>recommendations</code> on jobs page</li>
+            <li>Search <code>results</code> of search bar</li>
+            <li>From <code>Job gallery</code> on landing page</li>
+          </ul></p>
+        </div>
+        <div class="col">
+          <h4>Using the chatbot</h4>
+          <ol>
+            <li>Hello Andrea</li>
+            <li>I want job recommendations</li>
+            <li>My skills are C,C++,Python.</li>
+          </ol>
+        </div>
+        <div class="col">
+          <h4>Using the <code>REST API </code>of the webapp</h4>
+          <p>Refer to <a href="{{url_for('apipage') if session['loggedin'] else url_for('login')}}">documentation</a> to use the api to apply for jobs.</p>
+        </div>
+      </div>
+      <p>All these result in a <code>Apply</code> button, clicking on which an application is sent to the employer along with your resume. The status of the application's can be checked from the user's profile page.</p>
+      <hr>
+      <h3>Status of Job Application</h3>
+      <p>
+        After applying for a job, an email confirmation is sent to the user from getjob, if you are one of the qualified applicant's the 
+        recruiters of the organization will call you to set up a virtual interview.</p>
+      <p> The status of the application can be viewed from the 
+        profile page of the user or you can ask the chat bot.
+      </p><hr>
+      <h3>Logging out</h3>
+      <p>Click on <a href="{{url_for('logout')}}">Log out</a> from the navigation bar to log out of the webapp.</p>
+    </div>
+    </div>
+  </div>
     <footer class="page-footer font-small bg-dark text-white pt-4">
         <div class="container-fluid text-center text-md-left">
           <div class="row">
@@ -98,18 +312,29 @@
       </script>
       <script src="js/extention/choices.js"></script>
       <!-- Chat bot script -->
-      <script>
-        window.watsonAssistantChatOptions = {
-            integrationID: "c685c522-84a3-48bb-9fca-57b9a3e12905", // The ID of this integration.
-            region: "us-east", // The region your integration is hosted in.
-            serviceInstanceID: "1b8a0ba9-3af4-460d-9122-e849d725507c", // The ID of your service instance.
-            onLoad: function(instance) { instance.render(); }
-          };
-        setTimeout(function(){
-          const t=document.createElement('script');
-          t.src="https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js";
-          document.head.appendChild(t);
-        });
+      <!-- Script for the tabs -->
+    <script>
+      document.getElementById("defaultOpen").click();
+      function openCity(evt, cityName) {
+      // Declare all variables
+      var i, tabcontent, tablinks;
+    
+      // Get all elements with class="tabcontent" and hide them
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+    
+      // Get all elements with class="tablinks" and remove the class "active"
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+    
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
+      }
       </script>
 </body>
 </html>
